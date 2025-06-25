@@ -127,12 +127,10 @@ export function ImageRecreationChallenge() {
       try {
         setComparisonResult(JSON.parse(savedComparisonResult))
       } catch (e) {
-        // Ignore parsing errors
+       
       }
     }
   }, [])
-
-  // Save state to localStorage when it changes
   useEffect(() => {
     if (selectedImage) {
       localStorage.setItem('aiccore-challenge-selected-image', JSON.stringify(selectedImage))
