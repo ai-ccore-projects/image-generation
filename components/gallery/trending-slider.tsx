@@ -23,7 +23,7 @@ export function TrendingSlider() {
   const [images, setImages] = useState<TrendingImage[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-  const [autoPlay, setAutoPlay] = useState(true)
+  const [autoPlay, setAutoPlay] = useState(false)
 
   useEffect(() => {
     fetchTrendingImages()

@@ -22,7 +22,7 @@ export function AutoSlidingGallery() {
   const [images, setImages] = useState<CommunityImage[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-  const [isPaused, setIsPaused] = useState(false)
+  const [isPaused, setIsPaused] = useState(true)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const [centerImageIndex, setCenterImageIndex] = useState(0)
   const [imageLoadErrors, setImageLoadErrors] = useState<Set<string>>(new Set())
