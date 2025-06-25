@@ -11,11 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2 } from "lucide-react"
 
-interface LoginFormProps {
-  onToggleMode: () => void
-}
-
-export function LoginForm({ onToggleMode }: LoginFormProps) {
+export function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -76,12 +72,6 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
             Sign In
           </Button>
         </form>
-        <div className="mt-4 text-center text-sm">
-          {"Don't have an account? "}
-          <button onClick={onToggleMode} className="text-blue-600 hover:underline font-medium">
-            Sign up
-          </button>
-        </div>
       </CardContent>
     </Card>
   )

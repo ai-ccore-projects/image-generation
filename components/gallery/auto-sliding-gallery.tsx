@@ -3,8 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Sparkles, User, X } from 'lucide-react'
+import { Sparkles, User, X, Lock } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuth } from '@/contexts/auth-context'
 
 interface CommunityImage {
   id: string
@@ -19,6 +20,7 @@ interface CommunityImage {
 }
 
 export function AutoSlidingGallery() {
+  const { user, loading } = useAuth()
   const [images, setImages] = useState<CommunityImage[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
@@ -28,6 +30,47 @@ export function AutoSlidingGallery() {
   const [imageLoadErrors, setImageLoadErrors] = useState<Set<string>>(new Set())
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<CommunityImage | null>(null)
+
+  // Authentication check - only show to signed-in users
+  if (loading) {
+    return (
+      <div className="relative h-[600px] bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 overflow-hidden rounded-3xl">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-gray-600 dark:text-gray-300">Loading...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="relative h-[600px] bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 overflow-hidden rounded-3xl">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center space-y-6 max-w-md mx-auto px-6">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mx-auto">
+              <Lock className="h-10 w-10 text-white" />
+            </div>
+            <div>
+              <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">
+                Community Gallery
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                Please sign in to view our amazing AI-generated artwork gallery created by our talented community members.
+              </p>
+            </div>
+            <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl p-4">
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                🔒 <strong>Members Only</strong> - This gallery showcases incredible AI creations from authenticated users
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   useEffect(() => {
     fetchImages()

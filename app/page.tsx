@@ -20,22 +20,6 @@ export default function HomePage() {
       {/* Features Section */}
       
 
-      {/* CTA Section - Only for non-logged-in users */}
-      {!user && (
-        <section className="text-center space-y-6 py-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-2xl">
-          <h2 className="text-3xl font-bold">Ready to Start Creating?</h2>
-          <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-            Let's use AICCORE Image Studio to generate stunning visuals
-          </p>
-          <Link href="/auth">
-            <Button size="lg" className="px-8">
-              Start Generating Now
-              <Sparkles className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </section>
-      )}
-
       {/* AICCORE Contact Section - Always visible for all users with full content */}
       <section className="py-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-2xl">
         <div className="text-center mb-8">
