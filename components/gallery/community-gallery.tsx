@@ -31,6 +31,8 @@ export function CommunityGallery() {
   const [filterModel, setFilterModel] = useState('all')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [imageLoadErrors, setImageLoadErrors] = useState<Set<string>>(new Set())
+  const [selectedImage, setSelectedImage] = useState<CommunityImage | null>(null)
+  const [modalOpen, setModalOpen] = useState(false)
 
   useEffect(() => {
     fetchImages()
@@ -95,6 +97,16 @@ export function CommunityGallery() {
 
   const uniqueModels = Array.from(new Set(images.map(img => img.model_used)))
 
+  const openModal = (image: CommunityImage) => {
+    setSelectedImage(image)
+    setModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setModalOpen(false)
+    setSelectedImage(null)
+  }
+
   const handleShare = async (image: CommunityImage) => {
     const shareUrl = `${window.location.origin}/gallery?image=${image.id}`
     const shareText = `Check out this amazing AI-generated artwork by ${image.display_name || image.username}: "${image.prompt}"`
@@ -143,7 +155,7 @@ export function CommunityGallery() {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {filteredImages.map((image) => (
         <Card key={image.id} className="group overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-          <div className="relative aspect-square overflow-hidden">
+          <div className="relative aspect-square overflow-hidden cursor-pointer" onClick={() => openModal(image)}>
             <img
               src={image.image_url}
               alt={image.prompt}
@@ -380,6 +392,74 @@ export function CommunityGallery() {
           </div>
         ) : (
           <GridView />
+        )}
+
+        {/* Image Modal */}
+        {modalOpen && selectedImage && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+            onClick={closeModal}
+          >
+            <div 
+              className="relative max-w-[90vw] max-h-[90vh] bg-white dark:bg-gray-900 rounded-2xl overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 z-60 w-10 h-10 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                ✕
+              </button>
+
+              {/* Model Badge */}
+              <div className="absolute top-4 left-4 z-60">
+                <Badge className="bg-white/90 text-gray-800">
+                  {selectedImage.model_used}
+                </Badge>
+              </div>
+
+              {/* Full Size Image */}
+              <img
+                src={selectedImage.image_url}
+                alt={selectedImage.prompt}
+                className="w-full h-full object-contain"
+                style={{ maxHeight: '80vh' }}
+              />
+
+              {/* Image Info Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 text-white">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
+                    {selectedImage.avatar_url ? (
+                      <img
+                        src={selectedImage.avatar_url}
+                        alt={selectedImage.display_name}
+                        className="w-full h-full rounded-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.style.display = 'none'
+                        }}
+                      />
+                    ) : (
+                      <User className="h-4 w-4 text-white" />
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">
+                      {selectedImage.display_name || selectedImage.username || 'Anonymous Artist'}
+                    </p>
+                    <p className="text-white/80 text-xs">
+                      {formatDate(selectedImage.created_at)}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-sm text-white/90 leading-relaxed">
+                  "{selectedImage.prompt}"
+                </p>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     </div>
