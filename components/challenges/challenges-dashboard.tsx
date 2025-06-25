@@ -57,14 +57,14 @@ export function ChallengesDashboard() {
               className="text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-300"
             >
               <Image className="h-4 w-4 mr-2" />
-              Exercise 1
+              Exercise 2
             </TabsTrigger>
             <TabsTrigger 
               value="linkedin-profile" 
               className="text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all duration-300"
             >
               <Briefcase className="h-4 w-4 mr-2" />
-              Exercise 2
+              Exercise 3
             </TabsTrigger>
           </TabsList>
 

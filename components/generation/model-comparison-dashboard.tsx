@@ -27,6 +27,18 @@ const promptSuggestions = [
   "Crystal cave with rainbow lights",
   "Space station orbiting Saturn",
   "Medieval castle on cliff edge",
+  "Superman body with Batman head hybrid",
+  "Spider-Man costume with Deadpool personality",
+  "Iron Man armor with Captain America shield",
+  "Thor hammer wielding Wolverine claws",
+  "Hulk muscles with Flash speed aura",
+  "Wonder Woman lasso with Doctor Strange cape",
+  "Black Panther suit with Green Lantern ring",
+  "Deadpool mask with Superman cape flowing",
+  "Batman cowl on Venom symbiote body",
+  "Avengers logo merged with X-Men symbol",
+  "Aquaman trident with Storm lightning powers",
+  "Ant-Man helmet on Groot tree body",
   "Bioluminescent jungle at night",
   "Art Deco skyscraper in fog",
   "Magical library with floating books",
@@ -102,6 +114,7 @@ export function ModelComparisonDashboard() {
   const [revisedPrompt, setRevisedPrompt] = useState("")
   const [isPromptRevised, setIsPromptRevised] = useState(false)
   const [revising, setRevising] = useState(false)
+  const [generatingSuperhero, setGeneratingSuperhero] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [results, setResults] = useState<Record<string, any>>({})
   const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set(["gpt-4o", "dall-e-3"])) // Default to 2 popular models
@@ -261,6 +274,35 @@ export function ModelComparisonDashboard() {
     }
   }
 
+  // SCAM Template options
+  const scamOptions = {
+    superhero: ['Superman', 'Batman', 'Spider-Man', 'Wonder Woman', 'The Flash', 'Wolverine', 'Iron Man', 'Captain America', 'Thor', 'Hulk', 'Black Widow', 'Deadpool', 'Doctor Strange', 'Green Lantern', 'Aquaman', 'Daredevil', 'Black Panther', 'Scarlet Witch', 'Ant-Man', 'Captain Marvel'],
+    context: ['modern-day metropolis', 'post-apocalyptic wasteland', 'Victorian steampunk era', 'space-faring civilization', 'medieval fantasy realm', 'cyberpunk future city', 'small rural town', 'underwater kingdom', 'parallel dimension', 'dystopian society', 'wild west frontier', '1920s prohibition era', 'ancient civilization', 'floating sky cities', 'underground society'],
+    action: ['Design and develop', 'Create and elaborate on', 'Generate and describe', 'Invent and detail', 'Craft and explain', 'Build and characterize', 'Construct and define', 'Develop and showcase', 'Forge and outline', 'Shape and present'],
+    mode: ['comic book profile format', 'detailed narrative description', 'government file/dossier style', 'casual conversational tone', 'epic heroic storytelling', 'scientific analysis report', 'news article format', 'character sheet layout', 'interview transcript style', 'diary entry format', 'action-packed scene description', 'vintage pulp fiction style']
+  }
+
+  const generateSuperheroPrompt = () => {
+    setGeneratingSuperhero(true)
+    
+    // Randomly select one option from each category
+    const randomSuperhero = scamOptions.superhero[Math.floor(Math.random() * scamOptions.superhero.length)]
+    const randomContext = scamOptions.context[Math.floor(Math.random() * scamOptions.context.length)]
+    const randomAction = scamOptions.action[Math.floor(Math.random() * scamOptions.action.length)]
+    const randomMode = scamOptions.mode[Math.floor(Math.random() * scamOptions.mode.length)]
+    
+    // Generate the prompt using the template
+    const superheroPrompt = `Create a superhero character inspired by ${randomSuperhero} set in ${randomContext}. ${randomAction} this character with detailed background, powers, and personality. Present the information in ${randomMode}. Make the character original but with similar vibes/themes to the inspiration hero.`
+    
+    setPrompt(superheroPrompt)
+    // Reset any previous revision state
+    setIsPromptRevised(false)
+    setOriginalPrompt("")
+    setRevisedPrompt("")
+    
+    setTimeout(() => setGeneratingSuperhero(false), 500) // Small delay for visual feedback
+  }
+
   const handleGenerate = async () => {
     if (!prompt.trim()) return
     
@@ -392,8 +434,8 @@ export function ModelComparisonDashboard() {
         </div>
 
                 {/* Main Input Section - ChatGPT Style */}
-        <div className="max-w-6xl mx-auto">
-          <Card className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border-2 border-purple-300/50 dark:border-purple-600/50 shadow-2xl shadow-purple-500/10 dark:shadow-purple-500/20 mb-8 ring-2 ring-pink-200/30 dark:ring-pink-700/30 ring-offset-2 ring-offset-transparent">
+        <div className="max-w-4xl mx-auto">
+          <Card className="bg-white/50 dark:bg-gray-800/70 backdrop-blur-sm border-2 border-purple-300/50 dark:border-purple-600/50 shadow-2xl shadow-purple-500/10 dark:shadow-purple-500/20 mb-8 ring-2 ring-pink-200/30 dark:ring-pink-700/30 ring-offset-2 ring-offset-transparent">
             <CardContent className="p-4">
               
               {/* Prompt Input - Large and Centered */}
@@ -411,9 +453,34 @@ export function ModelComparisonDashboard() {
                 }
               }}
                     rows={3}
-                    className="text-base resize-none border-0 bg-transparent focus:ring-0 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:text-gray-100"
+                    className="text-base resize-none border-0 bg-transparent focus:ring-0 placeholder:text-gray-400 dark:placeholder:text-gray-500 dark:text-gray-100 pl-20 pr-32"
             />
                   
+                  {/* SCAM Superhero Generator */}
+                  <button
+                    onClick={generateSuperheroPrompt}
+                    disabled={generatingSuperhero}
+                    className={`
+                      absolute top-4 left-4 px-3 py-1.5 rounded-lg font-medium text-xs
+                      transition-all border disabled:opacity-50 hover:scale-105
+                      bg-gradient-to-r from-red-100 to-blue-100 dark:from-red-950/30 dark:to-blue-950/30 
+                      text-red-700 dark:text-red-400 border-red-300 dark:border-red-700 
+                      hover:from-red-200 hover:to-blue-200 dark:hover:from-red-950/50 dark:hover:to-blue-950/50 
+                      flex items-center gap-1.5
+                    `}
+                    title="Generate SCAM Superhero Prompt (S-C-A-M Template)"
+                  >
+                    {generatingSuperhero ? (
+                      <RefreshCw className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <>
+                        <span className="font-bold">$</span>
+                        
+                      </>
+                    )}
+                    
+                  </button>
+
                   {/* Enhance Button */}
             <button
               onClick={revisePrompt}
@@ -434,7 +501,7 @@ export function ModelComparisonDashboard() {
               ) : (
                       <Sparkles className="h-4 w-4" />
               )}
-                    <span>{revising ? 'Enhancing...' : isPromptRevised ? 'Revert' : 'Enhance'}</span>
+                    <span>{revising ? 'Enhancing...' : isPromptRevised ? '' : ''}</span>
             </button>
           </div>
                 
