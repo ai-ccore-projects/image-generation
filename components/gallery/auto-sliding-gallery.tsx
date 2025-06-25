@@ -22,7 +22,7 @@ export function AutoSlidingGallery() {
   const [images, setImages] = useState<CommunityImage[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
-  const [isPaused, setIsPaused] = useState(true)
+  const [isPaused, setIsPaused] = useState(false)
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
   const [centerImageIndex, setCenterImageIndex] = useState(0)
   const [imageLoadErrors, setImageLoadErrors] = useState<Set<string>>(new Set())
@@ -198,10 +198,12 @@ export function AutoSlidingGallery() {
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) % images.length)
+    // Don't pause auto-sliding when user manually navigates
   }
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+    // Don't pause auto-sliding when user manually navigates
   }
 
   const visibleImages = getVisibleImages()
@@ -209,6 +211,8 @@ export function AutoSlidingGallery() {
   return (
     <div 
       className="relative h-[600px] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
       {/* Header */}
       <div className="absolute top-8 left-8 z-20">
@@ -374,12 +378,11 @@ export function AutoSlidingGallery() {
         ))}
       </div>
 
-      {/* Pause Indicator */}
-      {isPaused && (
-        <div className="absolute top-4 right-4 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-          Paused
-        </div>
-      )}
+      {/* Auto-play Indicator */}
+      <div className="absolute top-4 right-4 bg-green-500/80 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2">
+        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+        Auto-sliding
+      </div>
 
       {/* Debug Panel - Show failed images */}
       {imageLoadErrors.size > 0 && process.env.NODE_ENV === 'development' && (
