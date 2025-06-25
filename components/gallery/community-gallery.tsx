@@ -52,6 +52,35 @@ export function CommunityGallery() {
     return () => window.removeEventListener('refreshCommunityGallery', handleRefresh)
   }, [])
 
+  // Handle keyboard navigation in modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!modalOpen) return
+      
+      if (e.key === 'Escape') {
+        closeModal()
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        navigateModal('prev')
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        navigateModal('next')
+      }
+    }
+
+    if (modalOpen) {
+      document.addEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'hidden' // Prevent background scrolling
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'unset'
+    }
+  }, [modalOpen, selectedImage])
+
   const fetchImages = async () => {
     try {
       setIsLoading(true)
@@ -105,6 +134,21 @@ export function CommunityGallery() {
   const closeModal = () => {
     setModalOpen(false)
     setSelectedImage(null)
+  }
+
+  const navigateModal = (direction: 'prev' | 'next') => {
+    if (!selectedImage) return
+    
+    const currentIndex = filteredImages.findIndex(img => img.id === selectedImage.id)
+    let newIndex
+    
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % filteredImages.length
+    } else {
+      newIndex = (currentIndex - 1 + filteredImages.length) % filteredImages.length
+    }
+    
+    setSelectedImage(filteredImages[newIndex])
   }
 
   const handleShare = async (image: CommunityImage) => {
@@ -412,10 +456,36 @@ export function CommunityGallery() {
                 ✕
               </button>
 
+              {/* Navigation Arrows */}
+              <button
+                onClick={() => navigateModal('prev')}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              <button
+                onClick={() => navigateModal('next')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
               {/* Model Badge */}
               <div className="absolute top-4 left-4 z-60">
                 <Badge className="bg-white/90 text-gray-800">
                   {selectedImage.model_used}
+                </Badge>
+              </div>
+
+              {/* Image Counter */}
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-60">
+                <Badge className="bg-black/50 text-white">
+                  {filteredImages.findIndex(img => img.id === selectedImage.id) + 1} / {filteredImages.length}
                 </Badge>
               </div>
 

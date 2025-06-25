@@ -59,26 +59,44 @@ export function AutoSlidingGallery() {
     setCenterImageIndex(currentIndex)
   }, [currentIndex])
 
-  // Handle escape key to close modal
+  // Handle keyboard navigation
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && modalOpen) {
-        closeModal()
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (modalOpen) {
+        if (e.key === 'Escape') {
+          closeModal()
+        } else if (e.key === 'ArrowLeft') {
+          e.preventDefault()
+          navigateModal('prev')
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault()
+          navigateModal('next')
+        }
+      } else {
+        // Gallery navigation when modal is closed
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault()
+          prevSlide()
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault()
+          nextSlide()
+        }
       }
     }
 
+    document.addEventListener('keydown', handleKeyDown)
+    
     if (modalOpen) {
-      document.addEventListener('keydown', handleEscape)
       document.body.style.overflow = 'hidden' // Prevent background scrolling
     } else {
       document.body.style.overflow = 'unset'
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape)
+      document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'unset'
     }
-  }, [modalOpen])
+  }, [modalOpen, selectedImage])
 
   const openModal = (image: CommunityImage) => {
     setSelectedImage(image)
@@ -88,6 +106,21 @@ export function AutoSlidingGallery() {
   const closeModal = () => {
     setModalOpen(false)
     setSelectedImage(null)
+  }
+
+  const navigateModal = (direction: 'prev' | 'next') => {
+    if (!selectedImage) return
+    
+    const currentIndex = images.findIndex(img => img.id === selectedImage.id)
+    let newIndex
+    
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % images.length
+    } else {
+      newIndex = (currentIndex - 1 + images.length) % images.length
+    }
+    
+    setSelectedImage(images[newIndex])
   }
 
   const fetchImages = async () => {
@@ -161,6 +194,14 @@ export function AutoSlidingGallery() {
         </div>
       </div>
     )
+  }
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length)
+  }
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
   }
 
   const visibleImages = getVisibleImages()
@@ -299,16 +340,36 @@ export function AutoSlidingGallery() {
         </div>
       </div>
 
+      {/* Navigation Arrows */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 z-30"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300 z-30"
+      >
+        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
       {/* Progress Indicator */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
         {images.map((_, index) => (
           <div
             key={index}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+            className={`w-2 h-2 rounded-full transition-all duration-300 cursor-pointer ${
               index === currentIndex
                 ? 'bg-purple-500 w-8'
-                : 'bg-white/40'
+                : 'bg-white/40 hover:bg-white/60'
             }`}
+            onClick={() => setCurrentIndex(index)}
           />
         ))}
       </div>
@@ -354,10 +415,36 @@ export function AutoSlidingGallery() {
                 <X className="h-5 w-5" />
               </button>
 
+              {/* Navigation Arrows */}
+              <button
+                onClick={() => navigateModal('prev')}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              
+              <button
+                onClick={() => navigateModal('next')}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
               {/* Model Badge */}
               <div className="absolute top-4 left-4 z-60">
                 <Badge className="bg-white/90 text-gray-800">
                   {selectedImage.model_used}
+                </Badge>
+              </div>
+
+              {/* Image Counter */}
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-60">
+                <Badge className="bg-black/50 text-white">
+                  {images.findIndex(img => img.id === selectedImage.id) + 1} / {images.length}
                 </Badge>
               </div>
 
