@@ -168,8 +168,6 @@ export function AutoSlidingGallery() {
   return (
     <div 
       className="relative h-[600px] w-full overflow-hidden rounded-3xl bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
     >
       {/* Header */}
       <div className="absolute top-8 left-8 z-20">
