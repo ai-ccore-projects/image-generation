@@ -50,6 +50,47 @@ export function ImageModal({ image, onClose, onDelete }: ImageModalProps) {
     }
   }
 
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/gallery?image=${image.id}`
+    const shareText = `Check out my AI-generated artwork: "${image.prompt}"`
+
+    try {
+      // Try using native Web Share API first (mobile-friendly)
+      if (navigator.share) {
+        await navigator.share({
+          title: 'AI Generated Artwork',
+          text: shareText,
+          url: shareUrl,
+        })
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`)
+        
+        toast({
+          title: "Link copied!",
+          description: "Share link has been copied to your clipboard.",
+        })
+      }
+    } catch (error) {
+      console.error('Share failed:', error)
+      
+      // Fallback: try copying just the URL
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+        toast({
+          title: "Link copied!",
+          description: "Share link has been copied to your clipboard.",
+        })
+      } catch (clipboardError) {
+        toast({
+          title: "Share failed",
+          description: "Could not share the image. Try copying the URL manually.",
+          variant: "destructive",
+        })
+      }
+    }
+  }
+
   const handleShareToggle = async (checked: boolean) => {
     setIsUpdatingShare(true)
     try {
@@ -122,6 +163,10 @@ export function ImageModal({ image, onClose, onDelete }: ImageModalProps) {
                 <Button onClick={handleDownload} className="flex-1">
                   <Download className="h-4 w-4 mr-2" />
                   Download
+                </Button>
+                <Button onClick={handleShare} variant="outline" className="flex-1">
+                  <Share2 className="h-4 w-4 mr-2" />
+                  Share
                 </Button>
                 <Button onClick={handleDelete} variant="destructive">
                   <Trash2 className="h-4 w-4" />

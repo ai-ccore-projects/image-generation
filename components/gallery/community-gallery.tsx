@@ -95,6 +95,50 @@ export function CommunityGallery() {
 
   const uniqueModels = Array.from(new Set(images.map(img => img.model_used)))
 
+  const handleShare = async (image: CommunityImage) => {
+    const shareUrl = `${window.location.origin}/gallery?image=${image.id}`
+    const shareText = `Check out this amazing AI-generated artwork by ${image.display_name || image.username}: "${image.prompt}"`
+
+    try {
+      // Try using native Web Share API first (mobile-friendly)
+      if (navigator.share) {
+        await navigator.share({
+          title: `AI Art by ${image.display_name || image.username}`,
+          text: shareText,
+          url: shareUrl,
+        })
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`)
+        
+        // Show a temporary notification
+        const notification = document.createElement('div')
+        notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300'
+        notification.textContent = '✅ Link copied to clipboard!'
+        document.body.appendChild(notification)
+        
+        // Remove notification after 3 seconds
+        setTimeout(() => {
+          notification.style.opacity = '0'
+          setTimeout(() => {
+            document.body.removeChild(notification)
+          }, 300)
+        }, 3000)
+      }
+    } catch (error) {
+      console.error('Share failed:', error)
+      
+      // Fallback fallback: try copying just the URL
+      try {
+        await navigator.clipboard.writeText(shareUrl)
+        alert('Link copied to clipboard!')
+      } catch (clipboardError) {
+        // Last resort: prompt user to copy manually
+        prompt('Copy this link to share:', shareUrl)
+      }
+    }
+  }
+
   const GridView = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {filteredImages.map((image) => (
@@ -136,6 +180,10 @@ export function CommunityGallery() {
                 size="sm"
                 variant="secondary"
                 className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleShare(image)
+                }}
               >
                 <Share2 className="h-4 w-4" />
               </Button>
