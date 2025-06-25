@@ -117,7 +117,7 @@ export function ImageRecreationChallenge() {
       try {
         setSelectedImage(JSON.parse(savedSelectedImage))
       } catch (e) {
-        // Ignore parsing errors
+        
       }
     }
     if (savedUserPrompt) setUserPrompt(savedUserPrompt)
