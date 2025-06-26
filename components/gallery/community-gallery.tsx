@@ -48,8 +48,11 @@ export function CommunityGallery() {
       fetchImages()
     }
     
-    window.addEventListener('refreshCommunityGallery', handleRefresh)
-    return () => window.removeEventListener('refreshCommunityGallery', handleRefresh)
+    // Check if window is available (browser environment)
+    if (typeof window !== "undefined") {
+      window.addEventListener('refreshCommunityGallery', handleRefresh)
+      return () => window.removeEventListener('refreshCommunityGallery', handleRefresh)
+    }
   }, [])
 
   // Handle keyboard navigation in modal
@@ -68,16 +71,18 @@ export function CommunityGallery() {
       }
     }
 
-    if (modalOpen) {
-      document.addEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'hidden' // Prevent background scrolling
-    } else {
-      document.body.style.overflow = 'unset'
-    }
+    if (typeof document !== "undefined") {
+      if (modalOpen) {
+        document.addEventListener('keydown', handleKeyDown)
+        document.body.style.overflow = 'hidden' // Prevent background scrolling
+      } else {
+        document.body.style.overflow = 'unset'
+      }
 
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-      document.body.style.overflow = 'unset'
+      return () => {
+        document.removeEventListener('keydown', handleKeyDown)
+        document.body.style.overflow = 'unset'
+      }
     }
   }, [modalOpen, selectedImage])
 
@@ -152,45 +157,64 @@ export function CommunityGallery() {
   }
 
   const handleShare = async (image: CommunityImage) => {
+    // Check if window is available (browser environment)
+    if (typeof window === "undefined") return
+
     const shareUrl = `${window.location.origin}/gallery?image=${image.id}`
     const shareText = `Check out this amazing AI-generated artwork by ${image.display_name || image.username}: "${image.prompt}"`
 
     try {
       // Try using native Web Share API first (mobile-friendly)
-      if (navigator.share) {
+      if (typeof navigator !== "undefined" && navigator.share) {
         await navigator.share({
           title: `AI Art by ${image.display_name || image.username}`,
           text: shareText,
           url: shareUrl,
         })
-      } else {
+      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
         // Fallback: copy to clipboard
         await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`)
         
         // Show a temporary notification
-        const notification = document.createElement('div')
-        notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300'
-        notification.textContent = '✅ Link copied to clipboard!'
-        document.body.appendChild(notification)
-        
-        // Remove notification after 3 seconds
-        setTimeout(() => {
-          notification.style.opacity = '0'
+        if (typeof document !== "undefined") {
+          const notification = document.createElement('div')
+          notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300'
+          notification.textContent = '✅ Link copied to clipboard!'
+          document.body.appendChild(notification)
+          
+          // Remove notification after 3 seconds
           setTimeout(() => {
-            document.body.removeChild(notification)
-          }, 300)
-        }, 3000)
+            notification.style.opacity = '0'
+            setTimeout(() => {
+              if (document.body.contains(notification)) {
+                document.body.removeChild(notification)
+              }
+            }, 300)
+          }, 3000)
+        }
+      } else {
+        // Last resort: use alert
+        alert(`Share this link: ${shareUrl}`)
       }
     } catch (error) {
       console.error('Share failed:', error)
       
       // Fallback fallback: try copying just the URL
       try {
-        await navigator.clipboard.writeText(shareUrl)
-        alert('Link copied to clipboard!')
+        if (typeof navigator !== "undefined" && navigator.clipboard) {
+          await navigator.clipboard.writeText(shareUrl)
+          alert('Link copied to clipboard!')
+        } else {
+          // Last resort: prompt user to copy manually
+          if (typeof window !== "undefined") {
+            prompt('Copy this link to share:', shareUrl)
+          }
+        }
       } catch (clipboardError) {
         // Last resort: prompt user to copy manually
-        prompt('Copy this link to share:', shareUrl)
+        if (typeof window !== "undefined") {
+          prompt('Copy this link to share:', shareUrl)
+        }
       }
     }
   }
