@@ -45,25 +45,26 @@ export function AutoSlidingGallery() {
     )
   }
 
+  // Show placeholder for non-authenticated users instead of requiring auth
   if (!user) {
     return (
       <div className="relative h-[600px] bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 overflow-hidden rounded-3xl">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center space-y-6 max-w-md mx-auto px-6">
             <div className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mx-auto">
-              <Lock className="h-10 w-10 text-white" />
+              <Sparkles className="h-10 w-10 text-white" />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">
                 Community Gallery
               </h3>
               <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Please sign in to view our amazing AI-generated artwork gallery created by our talented community members.
+                Discover amazing AI-generated artwork from our creative community. Sign in to explore the full gallery and share your own creations.
               </p>
             </div>
             <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl p-4">
               <p className="text-sm text-gray-700 dark:text-gray-300">
-                🔒 <strong>Members Only</strong> - This gallery showcases incredible AI creations from authenticated users
+                ✨ <strong>Join our community</strong> to view and share incredible AI art creations
               </p>
             </div>
           </div>
