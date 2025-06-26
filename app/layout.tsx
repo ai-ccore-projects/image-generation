@@ -21,12 +21,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
             <div className="min-h-screen bg-background flex flex-col">
               <Header />
-              <main className="container mx-auto px-4 pt-24 pb-20 flex-1">{children}</main>
+              <main className="container mx-auto px-4 pt-24 pb-20 flex-1" suppressHydrationWarning>
+                {children}
+              </main>
               
               {/* Fixed Footer */}
               <footer className="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 py-3 px-4 z-40">

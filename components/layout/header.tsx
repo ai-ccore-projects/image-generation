@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { UserProfileModal } from "@/components/auth/user-profile"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import { ThemeSafeLogo } from "./theme-safe-logo"
 
 export function Header() {
   const { user, signOut } = useAuth()
@@ -15,18 +16,7 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-          {/* Light mode logo */}
-          <img 
-            src="/image.png" 
-            alt="AICCORE" 
-            className="h-16 w-auto block dark:hidden"
-          />
-          {/* Dark mode logo */}
-          <img 
-            src="/logo.png" 
-            alt="AICCORE" 
-            className="h-14 w-auto hidden dark:block"
-          />
+          <ThemeSafeLogo />
           <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Image Studio
           </span>
