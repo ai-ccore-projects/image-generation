@@ -6,24 +6,46 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
-    const sortBy = searchParams.get('sort_by') || 'created_at'
-    const sortOrder = searchParams.get('sort_order') || 'desc'
-
-    const { data, error } = await supabase.rpc('get_public_gallery_images', {
-      limit_count: limit,
-      offset_count: offset,
-      sort_by: sortBy,
-      sort_order: sortOrder
-    })
+    
+    // Simplified query - directly query the generated_images table
+    const { data, error } = await supabase
+      .from('generated_images')
+      .select(`
+        id,
+        prompt,
+        model_used,
+        image_url,
+        created_at,
+        user_id,
+        profiles:user_id(username, display_name, avatar_url)
+      `)
+      .eq('is_public', true)
+      .order('created_at', { ascending: false })
+      .range(offset, offset + limit - 1)
 
     if (error) {
       console.error('Error fetching public images:', error)
-      return NextResponse.json({ error: 'Failed to fetch images' }, { status: 500 })
+      // Return empty array instead of error to prevent infinite loading
+      return NextResponse.json({ images: [] })
     }
 
-    return NextResponse.json({ images: data || [] })
+    // Transform the data to match expected format
+    const transformedData = (data || []).map(item => ({
+      id: item.id,
+      prompt: item.prompt,
+      model_used: item.model_used,
+      image_url: item.image_url,
+      created_at: item.created_at,
+      user_id: item.user_id,
+      username: item.profiles?.username || 'Anonymous',
+      display_name: item.profiles?.display_name || item.profiles?.username || 'Anonymous Artist',
+      avatar_url: item.profiles?.avatar_url
+    }))
+
+    return NextResponse.json({ images: transformedData })
   } catch (error) {
     console.error('API error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    // Return empty array instead of error to prevent infinite loading
+    return NextResponse.json({ images: [] })
   }
 } 

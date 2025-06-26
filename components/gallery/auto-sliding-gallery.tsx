@@ -169,13 +169,36 @@ export function AutoSlidingGallery() {
   const fetchImages = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch('/api/gallery/public?limit=20')
-      const data = await response.json()
-      if (data.images) {
-        setImages(data.images)
+      
+      // Add timeout to prevent infinite loading
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      
+      const response = await fetch('/api/gallery/public?limit=20', {
+        signal: controller.signal
+      })
+      
+      clearTimeout(timeoutId)
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.images && Array.isArray(data.images)) {
+          setImages(data.images)
+        } else {
+          console.warn('No images data received or invalid format')
+          setImages([])
+        }
+      } else {
+        console.error('API responded with error:', response.status)
+        setImages([])
       }
     } catch (error) {
-      console.error('Error fetching images:', error)
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.error('API request timed out')
+      } else {
+        console.error('Error fetching images:', error)
+      }
+      setImages([]) // Set empty array instead of leaving undefined
     } finally {
       setIsLoading(false)
     }
