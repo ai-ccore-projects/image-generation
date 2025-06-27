@@ -8,15 +8,11 @@ import { Palette, Zap, Shield, GalleryThumbnailsIcon as Gallery, ArrowRight, Spa
 import { AutoSlidingGallery } from "@/components/gallery/auto-sliding-gallery"
 import { useAuth } from "@/contexts/auth-context"
 import { AutoSlidingGallerySimple } from '@/components/gallery/auto-sliding-gallery-simple'
-import { BrowserCompatibilityCheck } from '@/components/browser-compatibility-check'
 
 export default function HomePage() {
   const { user } = useAuth()
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
-      {/* Browser Compatibility Check */}
-      <BrowserCompatibilityCheck />
-
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4">
         <div className="max-w-6xl mx-auto text-center">

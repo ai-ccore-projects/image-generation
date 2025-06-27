@@ -60,8 +60,13 @@ export async function POST(request: NextRequest) {
       style: style,
     })
 
-    const imageUrl = response.data?.[0]?.url
-    const revisedPrompt = response.data?.[0]?.revised_prompt
+    // Check if response and data exist
+    if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
+      throw new Error("No image data returned from OpenAI")
+    }
+
+    const imageUrl = response.data[0]?.url
+    const revisedPrompt = response.data[0]?.revised_prompt
 
     if (!imageUrl) {
       throw new Error("No image URL returned from OpenAI")

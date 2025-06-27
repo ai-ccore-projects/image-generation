@@ -5,6 +5,9 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 })
 
+// Type for Imagen-4 output
+type ImagenOutput = string | string[] | ReadableStream | Uint8Array | { url(): string } | unknown
+
 export async function POST(request: NextRequest) {
   try {
     const { prompt, params } = await request.json()
@@ -31,28 +34,53 @@ export async function POST(request: NextRequest) {
       safety_filter_level: "block_medium_and_above"
     }
 
-    const output = await replicate.run("google/imagen-4", { input })
+    const output: ImagenOutput = await replicate.run("google/imagen-4", { input })
 
     if (!output) {
       throw new Error("No output returned from Imagen-4")
     }
 
-    // Imagen-4 returns a URL or file object
-    let imageUrl = output
+    // Handle different response formats with proper type guards
+    let imageUrl: string
     
-    // Handle different response formats
-    if (typeof output === 'object' && output.url) {
-      imageUrl = output.url()
-    } else if (typeof output === 'string' && output.startsWith('http')) {
-      imageUrl = output
-    } else if (typeof output === 'string' && !output.startsWith('data:')) {
-      // If it's base64 data without data URL prefix
-      imageUrl = `data:image/jpeg;base64,${output}`
-    } else if (output instanceof ReadableStream || output instanceof Uint8Array) {
-      // If it's binary data, convert to base64
-      const buffer = output instanceof Uint8Array ? output : new Uint8Array(await new Response(output).arrayBuffer())
+    if (typeof output === 'string') {
+      if (output.startsWith('http')) {
+        imageUrl = output
+      } else if (output.startsWith('data:')) {
+        imageUrl = output
+      } else {
+        // If it's base64 data without data URL prefix
+        imageUrl = `data:image/jpeg;base64,${output}`
+      }
+    } else if (Array.isArray(output) && output.length > 0) {
+      // If it's an array, take the first item
+      const firstOutput = output[0]
+      if (typeof firstOutput === 'string' && firstOutput.startsWith('http')) {
+        imageUrl = firstOutput
+      } else {
+        imageUrl = typeof firstOutput === 'string' ? firstOutput : 'data:image/jpeg;base64,invalid'
+      }
+    } else if (output && typeof output === 'object' && 'url' in output && typeof (output as any).url === 'function') {
+      // Handle objects with url() method
+      try {
+        imageUrl = (output as { url(): string }).url()
+      } catch (error) {
+        console.error('Error calling url() method:', error)
+        imageUrl = String(output)
+      }
+    } else if (output instanceof ReadableStream) {
+      // Convert stream to base64
+      const buffer = new Uint8Array(await new Response(output).arrayBuffer())
       const base64 = Buffer.from(buffer).toString('base64')
       imageUrl = `data:image/jpeg;base64,${base64}`
+    } else if (output instanceof Uint8Array) {
+      // Convert binary data to base64
+      const base64 = Buffer.from(output).toString('base64')
+      imageUrl = `data:image/jpeg;base64,${base64}`
+    } else {
+      // Fallback for unknown types
+      console.warn('Unknown output type from Imagen-4:', typeof output)
+      imageUrl = String(output)
     }
 
     return NextResponse.json({
