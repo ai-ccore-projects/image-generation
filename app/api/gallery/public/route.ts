@@ -1,6 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase/server'
 
+// Define types for the query result
+interface ProfileData {
+  username: string | null
+  display_name: string | null
+  avatar_url: string | null
+}
+
+interface GalleryImageData {
+  id: string
+  prompt: string
+  model_used: string
+  image_url: string
+  created_at: string
+  user_id: string
+  profiles: ProfileData | ProfileData[] | null
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -30,17 +47,22 @@ export async function GET(request: NextRequest) {
     }
 
     // Transform the data to match expected format
-    const transformedData = (data || []).map(item => ({
-      id: item.id,
-      prompt: item.prompt,
-      model_used: item.model_used,
-      image_url: item.image_url,
-      created_at: item.created_at,
-      user_id: item.user_id,
-      username: item.profiles?.username || 'Anonymous',
-      display_name: item.profiles?.display_name || item.profiles?.username || 'Anonymous Artist',
-      avatar_url: item.profiles?.avatar_url
-    }))
+    const transformedData = (data as GalleryImageData[] || []).map(item => {
+      // Handle profiles data - it might be an array or single object
+      const profile = Array.isArray(item.profiles) ? item.profiles[0] : item.profiles
+      
+      return {
+        id: item.id,
+        prompt: item.prompt,
+        model_used: item.model_used,
+        image_url: item.image_url,
+        created_at: item.created_at,
+        user_id: item.user_id,
+        username: profile?.username || 'Anonymous',
+        display_name: profile?.display_name || profile?.username || 'Anonymous Artist',
+        avatar_url: profile?.avatar_url
+      }
+    })
 
     return NextResponse.json({ images: transformedData })
   } catch (error) {
