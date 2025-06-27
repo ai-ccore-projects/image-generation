@@ -10,6 +10,75 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+  
+  /* Browser compatibility fixes */
+  .backdrop-blur-fallback {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .dark .backdrop-blur-fallback {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  @supports (backdrop-filter: blur(8px)) {
+    .backdrop-blur-fallback {
+      backdrop-filter: blur(8px);
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .dark .backdrop-blur-fallback {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  /* Text gradient fallback */
+  .text-gradient-fallback {
+    background: linear-gradient(to right, #3b82f6, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  
+  @supports not (-webkit-background-clip: text) {
+    .text-gradient-fallback {
+      color: #3b82f6;
+      background: none;
+    }
+  }
+  
+  /* Aspect ratio fallback */
+  .aspect-square-fallback {
+    aspect-ratio: 1 / 1;
+  }
+  
+  @supports not (aspect-ratio: 1 / 1) {
+    .aspect-square-fallback {
+      height: 0;
+      padding-bottom: 100%;
+      position: relative;
+    }
+    
+    .aspect-square-fallback > * {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  
+  /* Viewport units fallback */
+  .min-h-screen-fallback {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+  
+  @supports not (height: 100svh) {
+    .min-h-screen-fallback {
+      min-height: 100vh;
+    }
+  }
 }
 
 @layer base {
