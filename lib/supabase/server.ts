@@ -21,3 +21,13 @@ export const supabaseAdmin = createClient(supabaseUrl, keyToUse, {
 
 // Export as 'supabase' for backward compatibility with existing API routes
 export const supabase = supabaseAdmin
+
+// Function to create server Supabase client - used by API routes
+export function createServerSupabaseClient() {
+  return createClient(supabaseUrl, keyToUse, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  })
+}
