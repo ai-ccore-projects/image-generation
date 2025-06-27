@@ -30,25 +30,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-purple-600/10 to-blue-600/10 dark:from-purple-600/20 dark:to-blue-600/20 rounded-3xl p-12 border border-purple-200/30 dark:border-purple-700/30">
-            <h2 className="text-4xl font-bold mb-6 text-gray-800 dark:text-white">
-              Ready to Create Something Amazing?
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-              Join thousands of creators already using our platform to bring their ideas to life
-            </p>
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 text-lg">
-                Get Started Now
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* AICCORE Contact Section - Always visible for all users with full content */}
       <section className="py-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-2xl">
