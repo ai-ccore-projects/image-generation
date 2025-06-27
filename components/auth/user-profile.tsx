@@ -31,6 +31,7 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [open, setOpen] = useState(false)
@@ -107,9 +108,26 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
     }
   }
 
-  const handleSignOut = () => {
-    setOpen(false)
-    signOut()
+  const handleSignOut = async () => {
+    try {
+      setLoggingOut(true)
+      setError("")
+      
+      const { error } = await signOut()
+      
+      if (error) {
+        console.error('Logout failed:', error)
+        setError('Failed to sign out. Please try again.')
+        setLoggingOut(false)
+      } else {
+        // Success - modal will close automatically when user state changes
+        setOpen(false)
+      }
+    } catch (error) {
+      console.error('Logout error:', error)
+      setError('Failed to sign out. Please try again.')
+      setLoggingOut(false)
+    }
   }
 
   return (
@@ -215,6 +233,7 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
                 onClick={handleSignOut}
                 className="w-full"
               >
+                {loggingOut && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign Out
               </Button>
