@@ -5,6 +5,9 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 })
 
+// Type for Replicate output
+type ReplicateOutput = string | string[] | ReadableStream | Uint8Array | unknown
+
 export async function POST(request: NextRequest) {
   try {
     const { prompt, params } = await request.json()
@@ -19,21 +22,38 @@ export async function POST(request: NextRequest) {
       input_image_2: params.input_image_2
     }
 
-    const output = await replicate.run("flux-kontext-apps/multi-image-kontext-pro", { input })
+    const output: ReplicateOutput = await replicate.run("flux-kontext-apps/multi-image-kontext-pro", { input })
 
     if (!output) {
       throw new Error("No output returned from Multi-Image Kontext Pro")
     }
 
-    // Handle the file output from Replicate
-    let imageUrl = output
-    if (typeof output === 'string' && output.startsWith('http')) {
-      imageUrl = output
-    } else if (output instanceof ReadableStream || output instanceof Uint8Array) {
-      // Convert binary data to base64
-      const buffer = output instanceof Uint8Array ? output : new Uint8Array(await new Response(output).arrayBuffer())
+    // Handle the file output from Replicate with proper type guards
+    let imageUrl: string
+    
+    if (typeof output === 'string') {
+      if (output.startsWith('http')) {
+        imageUrl = output
+      } else {
+        imageUrl = output.startsWith('data:') ? output : `data:image/png;base64,${output}`
+      }
+    } else if (Array.isArray(output) && output.length > 0) {
+      const firstOutput = output[0]
+      if (typeof firstOutput === 'string' && firstOutput.startsWith('http')) {
+        imageUrl = firstOutput
+      } else {
+        imageUrl = typeof firstOutput === 'string' ? firstOutput : 'data:image/png;base64,invalid'
+      }
+    } else if (output instanceof ReadableStream) {
+      const buffer = new Uint8Array(await new Response(output).arrayBuffer())
       const base64 = Buffer.from(buffer).toString('base64')
       imageUrl = `data:image/png;base64,${base64}`
+    } else if (output instanceof Uint8Array) {
+      const base64 = Buffer.from(output).toString('base64')
+      imageUrl = `data:image/png;base64,${base64}`
+    } else {
+      console.warn('Unknown output type from Replicate:', typeof output)
+      imageUrl = String(output)
     }
 
     return NextResponse.json({
