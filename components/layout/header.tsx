@@ -7,24 +7,44 @@ import { UserProfileModal } from "@/components/auth/user-profile"
 import { Moon, Sun, LogOut } from "lucide-react"
 import { useTheme } from "next-themes"
 import { ThemeSafeLogo } from "./theme-safe-logo"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export function Header() {
   const { user, signOut } = useAuth()
   const { theme, setTheme } = useTheme()
   const [loggingOut, setLoggingOut] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
 
   const handleQuickLogout = async () => {
-    if (loggingOut) return
+    if (loggingOut || !mounted) return
     
     setLoggingOut(true)
     try {
-      await signOut()
+      const { error } = await signOut()
+      if (error) {
+        console.error('Quick logout failed:', error)
+      } else {
+        // Navigate to home page after successful logout
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'
+        }
+      }
     } catch (error) {
       console.error('Quick logout failed:', error)
     } finally {
-      setLoggingOut(false)
+      if (mounted) {
+        setLoggingOut(false)
+      }
     }
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (
@@ -69,9 +89,9 @@ export function Header() {
                   onClick={handleQuickLogout}
                   disabled={loggingOut}
                   className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  title="Quick Logout"
+                  title={loggingOut ? "Signing out..." : "Quick Logout"}
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className={`h-4 w-4 ${loggingOut ? 'animate-spin' : ''}`} />
                 </Button>
                 
                 {/* Profile Modal */}

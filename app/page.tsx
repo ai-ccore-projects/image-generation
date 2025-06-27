@@ -53,58 +53,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-white">
-              Powerful Features
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Everything you need to create amazing AI-generated images
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="bg-white/80 dark:bg-gray-800/80 border-white/20 hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mb-4">
-                  <Zap className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle>Multiple AI Models</CardTitle>
-                <CardDescription>
-                  Choose from DALL-E 3, Midjourney, Stable Diffusion, and more cutting-edge models
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white/80 dark:bg-gray-800/80 border-white/20 hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center mb-4">
-                  <Palette className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle>Smart Comparisons</CardTitle>
-                <CardDescription>
-                  Compare results from different models side-by-side to find the perfect image
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="bg-white/80 dark:bg-gray-800/80 border-white/20 hover:bg-white/90 dark:hover:bg-gray-800/90 transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center mb-4">
-                  <Sparkles className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle>Community Gallery</CardTitle>
-                <CardDescription>
-                  Share your creations and discover amazing artwork from other creators
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
       {/* Community Gallery Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">

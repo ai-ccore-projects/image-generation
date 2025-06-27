@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { User, LogOut, Save, Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 interface UserProfile {
   id: string
@@ -35,19 +36,28 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { user, signOut } = useAuth()
+  const router = useRouter()
 
   // Form states
   const [displayName, setDisplayName] = useState("")
   const [bio, setBio] = useState("")
 
   useEffect(() => {
-    if (user && open) {
+    setMounted(true)
+    return () => setMounted(false)
+  }, [])
+
+  useEffect(() => {
+    if (user && open && mounted) {
       fetchProfile()
     }
-  }, [user, open])
+  }, [user, open, mounted])
 
   const fetchProfile = async () => {
+    if (!mounted || !user) return
+    
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -55,6 +65,8 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         .select('*')
         .eq('id', user?.id)
         .single()
+
+      if (!mounted) return
 
       if (error) {
         console.error('Error fetching profile:', error)
@@ -65,15 +77,19 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         setBio(data.bio || '')
       }
     } catch (error) {
-      console.error('Error:', error)
-      setError('Failed to load profile')
+      if (mounted) {
+        console.error('Error:', error)
+        setError('Failed to load profile')
+      }
     } finally {
-      setLoading(false)
+      if (mounted) {
+        setLoading(false)
+      }
     }
   }
 
   const saveProfile = async () => {
-    if (!user || !profile) return
+    if (!user || !profile || !mounted) return
 
     try {
       setSaving(true)
@@ -88,6 +104,8 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         })
         .eq('id', user.id)
 
+      if (!mounted) return
+
       if (error) {
         console.error('Error updating profile:', error)
         setError('Failed to save profile')
@@ -101,33 +119,52 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         } : null)
       }
     } catch (error) {
-      console.error('Error:', error)
-      setError('Failed to save profile')
+      if (mounted) {
+        console.error('Error:', error)
+        setError('Failed to save profile')
+      }
     } finally {
-      setSaving(false)
+      if (mounted) {
+        setSaving(false)
+      }
     }
   }
 
   const handleSignOut = async () => {
+    if (!mounted || loggingOut) return
+    
     try {
       setLoggingOut(true)
       setError("")
+      
+      // Close modal immediately
+      setOpen(false)
       
       const { error } = await signOut()
       
       if (error) {
         console.error('Logout failed:', error)
-        setError('Failed to sign out. Please try again.')
-        setLoggingOut(false)
+        if (mounted) {
+          setError('Failed to sign out. Please try again.')
+          setLoggingOut(false)
+        }
       } else {
-        // Success - modal will close automatically when user state changes
-        setOpen(false)
+        // Navigate to home page after successful logout
+        if (typeof window !== 'undefined') {
+          window.location.href = '/'
+        }
       }
     } catch (error) {
       console.error('Logout error:', error)
-      setError('Failed to sign out. Please try again.')
-      setLoggingOut(false)
+      if (mounted) {
+        setError('Failed to sign out. Please try again.')
+        setLoggingOut(false)
+      }
     }
+  }
+
+  if (!mounted) {
+    return null
   }
 
   return (
