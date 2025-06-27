@@ -27,16 +27,14 @@ export function ImageModal({ image, onClose, onDelete }: ImageModalProps) {
     try {
       const response = await fetch(image.image_url)
       const blob = await response.blob()
-      if (typeof window !== "undefined" && typeof document !== "undefined") {
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = `${image.model_used}-${image.id}.jpg`
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        document.body.removeChild(a)
-      }
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `${image.model_used}-${image.id}.jpg`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
     } catch (error) {
       toast({
         title: "Download failed",
@@ -53,18 +51,18 @@ export function ImageModal({ image, onClose, onDelete }: ImageModalProps) {
   }
 
   const handleShare = async () => {
-    const shareUrl = typeof window !== "undefined" ? `${window.location.origin}/gallery?image=${image.id}` : `/gallery?image=${image.id}`
+    const shareUrl = `${window.location.origin}/gallery?image=${image.id}`
     const shareText = `Check out my AI-generated artwork: "${image.prompt}"`
 
     try {
       // Try using native Web Share API first (mobile-friendly)
-      if (typeof navigator !== "undefined" && navigator.share) {
+      if (navigator.share) {
         await navigator.share({
           title: 'AI Generated Artwork',
           text: shareText,
           url: shareUrl,
         })
-      } else if (typeof navigator !== "undefined" && navigator.clipboard) {
+      } else {
         // Fallback: copy to clipboard
         await navigator.clipboard.writeText(`${shareText}\n\n${shareUrl}`)
         
@@ -78,9 +76,7 @@ export function ImageModal({ image, onClose, onDelete }: ImageModalProps) {
       
       // Fallback: try copying just the URL
       try {
-        if (typeof navigator !== "undefined" && navigator.clipboard) {
-          await navigator.clipboard.writeText(shareUrl)
-        }
+        await navigator.clipboard.writeText(shareUrl)
         toast({
           title: "Link copied!",
           description: "Share link has been copied to your clipboard.",

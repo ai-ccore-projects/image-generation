@@ -11,16 +11,11 @@ export async function POST(request: NextRequest) {
 
     // Since GPT-Image-1 is not a real model, we'll use DALL-E 2 as a representative
     const response = await openai.images.generate({
-      model: "gpt-image-1",
+      model: "dall-e-2",
       prompt: prompt,
       n: 1,
       size: "1024x1024",
     })
-
-    // Check if response and data exist
-    if (!response.data || !Array.isArray(response.data) || response.data.length === 0) {
-      throw new Error("No image data returned from OpenAI")
-    }
 
     const imageUrl = response.data[0]?.url
 
@@ -34,8 +29,6 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error("GPT-Image-1 generation error:", error)
-    return NextResponse.json({ 
-      error: error.message || "Failed to generate image" 
-    }, { status: 500 })
+    return NextResponse.json({ error: error.message || "Failed to generate image" }, { status: 500 })
   }
 }

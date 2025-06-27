@@ -13,7 +13,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { User, LogOut, Save, Loader2 } from "lucide-react"
-import { useRouter } from "next/navigation"
 
 interface UserProfile {
   id: string
@@ -32,32 +31,22 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [loggingOut, setLoggingOut] = useState(false)
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [open, setOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
   const { user, signOut } = useAuth()
-  const router = useRouter()
 
   // Form states
   const [displayName, setDisplayName] = useState("")
   const [bio, setBio] = useState("")
 
   useEffect(() => {
-    setMounted(true)
-    return () => setMounted(false)
-  }, [])
-
-  useEffect(() => {
-    if (user && open && mounted) {
+    if (user && open) {
       fetchProfile()
     }
-  }, [user, open, mounted])
+  }, [user, open])
 
   const fetchProfile = async () => {
-    if (!mounted || !user) return
-    
     try {
       setLoading(true)
       const { data, error } = await supabase
@@ -65,8 +54,6 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         .select('*')
         .eq('id', user?.id)
         .single()
-
-      if (!mounted) return
 
       if (error) {
         console.error('Error fetching profile:', error)
@@ -77,19 +64,15 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         setBio(data.bio || '')
       }
     } catch (error) {
-      if (mounted) {
-        console.error('Error:', error)
-        setError('Failed to load profile')
-      }
+      console.error('Error:', error)
+      setError('Failed to load profile')
     } finally {
-      if (mounted) {
-        setLoading(false)
-      }
+      setLoading(false)
     }
   }
 
   const saveProfile = async () => {
-    if (!user || !profile || !mounted) return
+    if (!user || !profile) return
 
     try {
       setSaving(true)
@@ -104,8 +87,6 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         })
         .eq('id', user.id)
 
-      if (!mounted) return
-
       if (error) {
         console.error('Error updating profile:', error)
         setError('Failed to save profile')
@@ -119,52 +100,16 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
         } : null)
       }
     } catch (error) {
-      if (mounted) {
-        console.error('Error:', error)
-        setError('Failed to save profile')
-      }
+      console.error('Error:', error)
+      setError('Failed to save profile')
     } finally {
-      if (mounted) {
-        setSaving(false)
-      }
+      setSaving(false)
     }
   }
 
-  const handleSignOut = async () => {
-    if (!mounted || loggingOut) return
-    
-    try {
-      setLoggingOut(true)
-      setError("")
-      
-      // Close modal immediately
-      setOpen(false)
-      
-      const { error } = await signOut()
-      
-      if (error) {
-        console.error('Logout failed:', error)
-        if (mounted) {
-          setError('Failed to sign out. Please try again.')
-          setLoggingOut(false)
-        }
-      } else {
-        // Navigate to home page after successful logout
-        if (typeof window !== 'undefined') {
-          window.location.href = '/'
-        }
-      }
-    } catch (error) {
-      console.error('Logout error:', error)
-      if (mounted) {
-        setError('Failed to sign out. Please try again.')
-        setLoggingOut(false)
-      }
-    }
-  }
-
-  if (!mounted) {
-    return null
+  const handleSignOut = () => {
+    setOpen(false)
+    signOut()
   }
 
   return (
@@ -268,12 +213,10 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
               <Button 
                 variant="destructive" 
                 onClick={handleSignOut}
-                disabled={loggingOut}
                 className="w-full"
               >
-                {loggingOut && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 <LogOut className="mr-2 h-4 w-4" />
-                {loggingOut ? 'Signing Out...' : 'Sign Out'}
+                Sign Out
               </Button>
             </div>
 

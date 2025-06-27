@@ -29,6 +29,71 @@ export function AutoSlidingGallerySimple() {
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<CommunityImage | null>(null)
 
+  const fetchImages = async () => {
+    try {
+      setIsLoading(true)
+      
+      // Add timeout to prevent infinite loading
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      
+      const response = await fetch('/api/gallery/public?limit=20', {
+        signal: controller.signal
+      })
+      
+      clearTimeout(timeoutId)
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.images && Array.isArray(data.images)) {
+          setImages(data.images)
+        } else {
+          console.warn('No images data received or invalid format')
+          setImages([])
+        }
+      } else {
+        console.error('API responded with error:', response.status)
+        setImages([])
+      }
+    } catch (error) {
+      if (error instanceof Error && error.name === 'AbortError') {
+        console.error('API request timed out')
+      } else {
+        console.error('Error fetching images:', error)
+      }
+      setImages([]) // Set empty array instead of leaving undefined
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user && !loading) {
+      fetchImages()
+    }
+  }, [user, loading])
+
+  useEffect(() => {
+    if (images.length === 0) return
+
+    // Start auto-sliding
+    const startAutoSlide = () => {
+      intervalRef.current = setInterval(() => {
+        if (!isPaused) {
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
+        }
+      }, 3000) // Change every 3 seconds
+    }
+
+    startAutoSlide()
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [images, isPaused])
+
   // Authentication check - only show to signed-in users
   if (loading) {
     return (
@@ -69,69 +134,6 @@ export function AutoSlidingGallerySimple() {
         </div>
       </div>
     )
-  }
-
-  useEffect(() => {
-    fetchImages()
-  }, [])
-
-  useEffect(() => {
-    if (images.length === 0) return
-
-    // Start auto-sliding
-    const startAutoSlide = () => {
-      intervalRef.current = setInterval(() => {
-        if (!isPaused) {
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-        }
-      }, 3000) // Change every 3 seconds
-    }
-
-    startAutoSlide()
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current)
-      }
-    }
-  }, [images, isPaused])
-
-  const fetchImages = async () => {
-    try {
-      setIsLoading(true)
-      
-      // Add timeout to prevent infinite loading
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
-      
-      const response = await fetch('/api/gallery/public?limit=20', {
-        signal: controller.signal
-      })
-      
-      clearTimeout(timeoutId)
-      
-      if (response.ok) {
-        const data = await response.json()
-        if (data.images && Array.isArray(data.images)) {
-          setImages(data.images)
-        } else {
-          console.warn('No images data received or invalid format')
-          setImages([])
-        }
-      } else {
-        console.error('API responded with error:', response.status)
-        setImages([])
-      }
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        console.error('API request timed out')
-      } else {
-        console.error('Error fetching images:', error)
-      }
-      setImages([]) // Set empty array instead of leaving undefined
-    } finally {
-      setIsLoading(false)
-    }
   }
 
   const formatDate = (dateString: string) => {

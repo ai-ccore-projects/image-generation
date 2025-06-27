@@ -10,7 +10,7 @@ interface AuthContextType {
   user: User | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: any }>
-  signOut: () => Promise<{ error: any }>
+  signOut: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -18,123 +18,35 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-    
-    // Add timeout to prevent infinite loading
-    const loadingTimeout = setTimeout(() => {
-      if (mounted) {
-        console.warn('Auth loading timeout - forcing completion')
-        setLoading(false)
-      }
-    }, 5000) // 5 second timeout
-    
     // Get initial session
-    supabase.auth.getSession()
-      .then(({ data: { session } }) => {
-        if (mounted) {
-          setUser(session?.user ?? null)
-          setLoading(false)
-          clearTimeout(loadingTimeout)
-        }
-      })
-      .catch((error) => {
-        console.error('Auth session error:', error)
-        if (mounted) {
-          setUser(null)
-          setLoading(false)
-          clearTimeout(loadingTimeout)
-        }
-      })
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
 
     // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state change:', event, session?.user?.email)
-      
-      if (mounted) {
-        setUser(session?.user ?? null)
-        setLoading(false)
-        clearTimeout(loadingTimeout)
-        
-        // Handle logout event - clear data but don't auto-redirect
-        if (event === 'SIGNED_OUT') {
-          console.log('User signed out, clearing cached data')
-          setUser(null)
-          // Clear any cached data safely
-          if (typeof window !== 'undefined') {
-            try {
-              localStorage.removeItem('supabase.auth.token')
-              sessionStorage.clear()
-            } catch (error) {
-              console.warn('Error clearing storage:', error)
-            }
-          }
-          // Let components handle their own navigation
-        }
-      }
+      setUser(session?.user ?? null)
+      setLoading(false)
     })
 
-    return () => {
-      setMounted(false)
-      subscription.unsubscribe()
-      clearTimeout(loadingTimeout)
-    }
+    return () => subscription.unsubscribe()
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      return { error }
-    } catch (error) {
-      console.error('Sign in error:', error)
-      return { error }
-    }
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+    return { error }
   }
 
   const signOut = async () => {
-    try {
-      console.log('Signing out user...')
-      
-      // Clear local state immediately to prevent UI issues
-      if (mounted) {
-        setUser(null)
-      }
-      
-      // Clear cached data before signing out
-      if (typeof window !== 'undefined') {
-        try {
-          localStorage.removeItem('supabase.auth.token')
-          sessionStorage.clear()
-        } catch (error) {
-          console.warn('Error clearing storage:', error)
-        }
-      }
-      
-      const { error } = await supabase.auth.signOut()
-      
-      if (error) {
-        console.error('Logout error:', error)
-        return { error }
-      }
-      
-      console.log('User signed out successfully')
-      return { error: null }
-    } catch (error) {
-      console.error('Logout error:', error)
-      return { error }
-    }
-  }
-
-  // Don't render children until mounted to prevent hydration issues
-  if (!mounted) {
-    return null
+    await supabase.auth.signOut()
   }
 
   return <AuthContext.Provider value={{ user, loading, signIn, signOut }}>{children}</AuthContext.Provider>

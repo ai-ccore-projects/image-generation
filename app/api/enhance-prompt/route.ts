@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const enhancedPrompt = response.choices[0]?.message?.content?.trim() || prompt
 
     return NextResponse.json({
-      enhanced_prompt: enhancedPrompt,
+      enhanced_prompt: prompt,
       original_prompt: prompt
     })
   } catch (error: any) {

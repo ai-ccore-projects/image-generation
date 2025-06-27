@@ -5,9 +5,6 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 })
 
-// Type for Replicate output
-type ReplicateOutput = string | string[] | ReadableStream | Uint8Array | unknown
-
 export async function POST(request: NextRequest) {
   try {
     const { prompt, params } = await request.json()
@@ -22,44 +19,21 @@ export async function POST(request: NextRequest) {
       control_image: params.control_image
     }
 
-    const output: ReplicateOutput = await replicate.run("black-forest-labs/flux-depth-pro", { input })
+    const output = await replicate.run("black-forest-labs/flux-depth-pro", { input })
 
     if (!output) {
       throw new Error("No output returned from FLUX Depth Pro")
     }
 
-    // Handle the file output from Replicate with proper type guards
-    let imageUrl: string
-    
-    if (typeof output === 'string') {
-      // If it's a string, check if it's a URL or base64
-      if (output.startsWith('http')) {
-        imageUrl = output
-      } else {
-        // Assume it's base64 or raw data
-        imageUrl = output.startsWith('data:') ? output : `data:image/jpeg;base64,${output}`
-      }
-    } else if (Array.isArray(output) && output.length > 0) {
-      // If it's an array, take the first item
-      const firstOutput = output[0]
-      if (typeof firstOutput === 'string' && firstOutput.startsWith('http')) {
-        imageUrl = firstOutput
-      } else {
-        imageUrl = typeof firstOutput === 'string' ? firstOutput : 'data:image/jpeg;base64,invalid'
-      }
-    } else if (output instanceof ReadableStream) {
-      // Convert stream to base64
-      const buffer = new Uint8Array(await new Response(output).arrayBuffer())
+    // Handle the file output from Replicate
+    let imageUrl = output
+    if (typeof output === 'string' && output.startsWith('http')) {
+      imageUrl = output
+    } else if (output instanceof ReadableStream || output instanceof Uint8Array) {
+      // Convert binary data to base64
+      const buffer = output instanceof Uint8Array ? output : new Uint8Array(await new Response(output).arrayBuffer())
       const base64 = Buffer.from(buffer).toString('base64')
       imageUrl = `data:image/jpeg;base64,${base64}`
-    } else if (output instanceof Uint8Array) {
-      // Convert binary data to base64
-      const base64 = Buffer.from(output).toString('base64')
-      imageUrl = `data:image/jpeg;base64,${base64}`
-    } else {
-      // Fallback for unknown types
-      console.warn('Unknown output type from Replicate:', typeof output)
-      imageUrl = String(output)
     }
 
     return NextResponse.json({

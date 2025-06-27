@@ -1,35 +1,19 @@
 "use client"
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Palette, Zap, Shield, GalleryThumbnailsIcon as Gallery, ArrowRight, Sparkles, ExternalLink, Mail, Phone, MapPin, Clock } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ExternalLink, Mail, Phone, MapPin, Clock } from "lucide-react"
 import { AutoSlidingGallery } from "@/components/gallery/auto-sliding-gallery"
-import { useAuth } from "@/contexts/auth-context"
-import { AutoSlidingGallerySimple } from '@/components/gallery/auto-sliding-gallery-simple'
 
 export default function HomePage() {
-  const { user } = useAuth()
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
-      {/* Community Gallery Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold mb-4 text-gray-800 dark:text-white">
-              Community Showcase
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300">
-              Discover incredible AI-generated artwork from our community
-            </p>
-          </div>
-          
-          {/* Auto-sliding Gallery */}
-          <AutoSlidingGallerySimple />
-        </div>
+    <div className="space-y-16">
+      {/* Community Gallery Slider */}
+      <section className="py-8">
+        <AutoSlidingGallery />
       </section>
 
+      {/* Features Section */}
+      
 
       {/* AICCORE Contact Section - Always visible for all users with full content */}
       <section className="py-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-2xl">

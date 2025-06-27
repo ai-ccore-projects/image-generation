@@ -31,55 +31,61 @@ export function AutoSlidingGallery() {
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedImage, setSelectedImage] = useState<CommunityImage | null>(null)
 
-  // Detect browser capabilities
-  const supportsBackdropFilter = typeof window !== 'undefined' && CSS.supports('backdrop-filter', 'blur(8px)')
-  const supportsAspectRatio = typeof window !== 'undefined' && CSS.supports('aspect-ratio', '1 / 1')
-
-  // Authentication check - only show to signed-in users
-  if (loading) {
-    return (
-      <div className="relative h-[600px] bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 overflow-hidden rounded-3xl">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto"></div>
-            <p className="text-gray-600 dark:text-gray-300">Loading...</p>
-          </div>
-        </div>
-      </div>
-    )
+  const fetchImages = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch('/api/gallery/public?limit=20')
+      const data = await response.json()
+      if (data.images) {
+        setImages(data.images)
+      }
+    } catch (error) {
+      console.error('Error fetching images:', error)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  // Show placeholder for non-authenticated users instead of requiring auth
-  if (!user) {
-    return (
-      <div className="relative h-[600px] bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 overflow-hidden rounded-3xl">
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center space-y-6 max-w-md mx-auto px-6">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mx-auto">
-              <Sparkles className="h-10 w-10 text-white" />
-            </div>
-            <div>
-              <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">
-                Community Gallery
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Discover amazing AI-generated artwork from our creative community. Sign in to explore the full gallery and share your own creations.
-              </p>
-            </div>
-            <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl p-4">
-              <p className="text-sm text-gray-700 dark:text-gray-300">
-                ✨ <strong>Join our community</strong> to view and share incredible AI art creations
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
+  const openModal = (image: CommunityImage) => {
+    setSelectedImage(image)
+    setModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setModalOpen(false)
+    setSelectedImage(null)
+  }
+
+  const navigateModal = (direction: 'prev' | 'next') => {
+    if (!selectedImage) return
+    
+    const currentIndex = images.findIndex(img => img.id === selectedImage.id)
+    let newIndex
+    
+    if (direction === 'next') {
+      newIndex = (currentIndex + 1) % images.length
+    } else {
+      newIndex = (currentIndex - 1 + images.length) % images.length
+    }
+    
+    setSelectedImage(images[newIndex])
+  }
+
+  const nextSlide = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length)
+    // Don't pause auto-sliding when user manually navigates
+  }
+
+  const prevSlide = () => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+    // Don't pause auto-sliding when user manually navigates
   }
 
   useEffect(() => {
-    fetchImages()
-  }, [])
+    if (user && !loading) {
+      fetchImages()
+    }
+  }, [user, loading])
 
   useEffect(() => {
     if (images.length === 0) return
@@ -132,85 +138,59 @@ export function AutoSlidingGallery() {
       }
     }
 
-    if (typeof document !== 'undefined') {
-      document.addEventListener('keydown', handleKeyDown)
-      
-      if (modalOpen) {
-        document.body.style.overflow = 'hidden' // Prevent background scrolling
-      } else {
-        document.body.style.overflow = 'unset'
-      }
+    document.addEventListener('keydown', handleKeyDown)
+    
+    if (modalOpen) {
+      document.body.style.overflow = 'hidden' // Prevent background scrolling
+    } else {
+      document.body.style.overflow = 'unset'
     }
 
     return () => {
-      if (typeof document !== 'undefined') {
-        document.removeEventListener('keydown', handleKeyDown)
-        document.body.style.overflow = 'unset'
-      }
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'unset'
     }
-  }, [modalOpen, selectedImage])
+  }, [modalOpen, selectedImage, navigateModal, closeModal, prevSlide, nextSlide])
 
-  const openModal = (image: CommunityImage) => {
-    setSelectedImage(image)
-    setModalOpen(true)
+  // Authentication check - only show to signed-in users
+  if (loading) {
+    return (
+      <div className="relative h-[600px] bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 overflow-hidden rounded-3xl">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="animate-spin w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-gray-600 dark:text-gray-300">Loading...</p>
+          </div>
+        </div>
+      </div>
+    )
   }
 
-  const closeModal = () => {
-    setModalOpen(false)
-    setSelectedImage(null)
-  }
-
-  const navigateModal = (direction: 'prev' | 'next') => {
-    if (!selectedImage) return
-    
-    const currentIndex = images.findIndex(img => img.id === selectedImage.id)
-    let newIndex
-    
-    if (direction === 'next') {
-      newIndex = (currentIndex + 1) % images.length
-    } else {
-      newIndex = (currentIndex - 1 + images.length) % images.length
-    }
-    
-    setSelectedImage(images[newIndex])
-  }
-
-  const fetchImages = async () => {
-    try {
-      setIsLoading(true)
-      
-      // Add timeout to prevent infinite loading
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
-      
-      const response = await fetch('/api/gallery/public?limit=20', {
-        signal: controller.signal
-      })
-      
-      clearTimeout(timeoutId)
-      
-      if (response.ok) {
-        const data = await response.json()
-        if (data.images && Array.isArray(data.images)) {
-          setImages(data.images)
-        } else {
-          console.warn('No images data received or invalid format')
-          setImages([])
-        }
-      } else {
-        console.error('API responded with error:', response.status)
-        setImages([])
-      }
-    } catch (error) {
-      if (error instanceof Error && error.name === 'AbortError') {
-        console.error('API request timed out')
-      } else {
-        console.error('Error fetching images:', error)
-      }
-      setImages([]) // Set empty array instead of leaving undefined
-    } finally {
-      setIsLoading(false)
-    }
+  if (!user) {
+    return (
+      <div className="relative h-[600px] bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-blue-900/20 overflow-hidden rounded-3xl">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center space-y-6 max-w-md mx-auto px-6">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center mx-auto">
+              <Lock className="h-10 w-10 text-white" />
+            </div>
+            <div>
+              <h3 className="text-3xl font-bold text-gray-800 dark:text-white mb-3">
+                Community Gallery
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
+                Please sign in to view our amazing AI-generated artwork gallery created by our talented community members.
+              </p>
+            </div>
+            <div className="bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl p-4">
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                🔒 <strong>Members Only</strong> - This gallery showcases incredible AI creations from authenticated users
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   const getVisibleImages = () => {
@@ -221,11 +201,11 @@ export function AutoSlidingGallery() {
     
     for (let i = 0; i < visibleCount; i++) {
       const index = (currentIndex + i - 2 + images.length) % images.length
-      visible.push({
-        ...images[index],
-        position: i,
-        isCenter: i === 2
-      })
+              visible.push({
+          ...images[index],
+          position: i,
+          isCenter: i === 2
+        })
     }
     
     return visible
@@ -236,15 +216,6 @@ export function AutoSlidingGallery() {
       month: 'short',
       day: 'numeric'
     })
-  }
-
-  // Browser-safe image error handler
-  const handleImageError = (imageId: string, imageElement: HTMLImageElement) => {
-    console.error(`Failed to load image: ${imageId}`)
-    setImageLoadErrors(prev => new Set([...prev, imageId]))
-    
-    // Replace with data URL instead of DOM manipulation
-    imageElement.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect width='400' height='400' fill='%23f3f4f6'/%3E%3Ctext x='200' y='200' text-anchor='middle' dy='0.35em' font-family='Arial, sans-serif' font-size='16' fill='%236b7280'%3EImage Unavailable%3C/text%3E%3C/svg%3E"
   }
 
   if (isLoading) {
@@ -278,16 +249,6 @@ export function AutoSlidingGallery() {
         </div>
       </div>
     )
-  }
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length)
-    // Don't pause auto-sliding when user manually navigates
-  }
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
-    // Don't pause auto-sliding when user manually navigates
   }
 
   const visibleImages = getVisibleImages()
@@ -340,10 +301,10 @@ export function AutoSlidingGallery() {
                   damping: 15
                 }}
               >
-                <Card className={`w-72 ${supportsBackdropFilter ? 'bg-white/90 backdrop-blur-sm' : 'bg-white/95'} border-white/20 overflow-hidden transition-all duration-300 ${isCenter ? 'ring-4 ring-purple-500/60 shadow-2xl' : 'shadow-lg'}`}>
+                <Card className={`w-72 bg-white/90 backdrop-blur-sm border-white/20 overflow-hidden transition-all duration-300 ${isCenter ? 'ring-4 ring-purple-500/60 shadow-2xl' : 'shadow-lg'}`}>
                   {/* Image */}
                   <div 
-                    className={`relative overflow-hidden cursor-pointer ${supportsAspectRatio ? 'aspect-square' : 'aspect-square-fallback'}`}
+                    className="relative aspect-square overflow-hidden cursor-pointer"
                     onClick={() => openModal(image)}
                   >
                     <motion.img
@@ -354,7 +315,22 @@ export function AutoSlidingGallery() {
                       transition={{ duration: 0.8 }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement
-                        handleImageError(image.id, target)
+                        console.error(`Failed to load image: ${image.prompt} (${image.model_used})`, image.image_url)
+                        setImageLoadErrors(prev => new Set([...prev, image.id]))
+                        // Create a custom placeholder
+                        target.style.display = 'none'
+                        const placeholder = document.createElement('div')
+                        placeholder.className = 'w-full h-full bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center'
+                        placeholder.innerHTML = `
+                          <div class="text-center text-gray-600">
+                            <svg class="w-16 h-16 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
+                              <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd" />
+                            </svg>
+                            <p class="text-sm font-medium">Image Loading Failed</p>
+                            <p class="text-xs opacity-60">${image.model_used}</p>
+                          </div>
+                        `
+                        target.parentElement?.appendChild(placeholder)
                       }}
                       onLoad={(e) => {
                         const target = e.target as HTMLImageElement
@@ -414,7 +390,7 @@ export function AutoSlidingGallery() {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className={`absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full ${supportsBackdropFilter ? 'bg-black/40 backdrop-blur-sm' : 'bg-black/60'} border-2 border-white/50 flex items-center justify-center text-white hover:bg-black/60 hover:scale-110 transition-all duration-300 z-40 shadow-lg`}
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-black/40 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-white hover:bg-black/60 hover:scale-110 transition-all duration-300 z-40 shadow-lg"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -425,7 +401,7 @@ export function AutoSlidingGallery() {
       
       <button
         onClick={nextSlide}
-        className={`absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full ${supportsBackdropFilter ? 'bg-black/40 backdrop-blur-sm' : 'bg-black/60'} border-2 border-white/50 flex items-center justify-center text-white hover:bg-black/60 hover:scale-110 transition-all duration-300 z-40 shadow-lg`}
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-black/40 backdrop-blur-sm border-2 border-white/50 flex items-center justify-center text-white hover:bg-black/60 hover:scale-110 transition-all duration-300 z-40 shadow-lg"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -467,7 +443,7 @@ export function AutoSlidingGallery() {
       <AnimatePresence>
         {modalOpen && selectedImage && (
           <motion.div
-            className={`fixed inset-0 z-50 flex items-center justify-center ${supportsBackdropFilter ? 'bg-black/90 backdrop-blur-sm' : 'bg-black/95'}`}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -484,7 +460,7 @@ export function AutoSlidingGallery() {
               {/* Close Button */}
               <button
                 onClick={closeModal}
-                className={`absolute top-4 right-4 z-60 w-10 h-10 ${supportsBackdropFilter ? 'bg-black/20 hover:bg-black/40 backdrop-blur-sm' : 'bg-black/40 hover:bg-black/60'} rounded-full flex items-center justify-center text-white transition-colors`}
+                className="absolute top-4 right-4 z-60 w-10 h-10 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -492,7 +468,7 @@ export function AutoSlidingGallery() {
               {/* Navigation Arrows */}
               <button
                 onClick={() => navigateModal('prev')}
-                className={`absolute left-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 ${supportsBackdropFilter ? 'bg-black/20 hover:bg-black/40 backdrop-blur-sm' : 'bg-black/40 hover:bg-black/60'} rounded-full flex items-center justify-center text-white transition-colors`}
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -501,7 +477,7 @@ export function AutoSlidingGallery() {
               
               <button
                 onClick={() => navigateModal('next')}
-                className={`absolute right-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 ${supportsBackdropFilter ? 'bg-black/20 hover:bg-black/40 backdrop-blur-sm' : 'bg-black/40 hover:bg-black/60'} rounded-full flex items-center justify-center text-white transition-colors`}
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-60 w-12 h-12 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-colors"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
