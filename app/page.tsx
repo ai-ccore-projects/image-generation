@@ -13,46 +13,6 @@ export default function HomePage() {
   const { user } = useAuth()
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 dark:from-gray-900 dark:via-purple-900/20 dark:to-blue-900/20">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4">
-        <div className="max-w-6xl mx-auto text-center">
-          {/* Decorative Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-800/80 border border-white/20 text-sm font-medium text-purple-700 dark:text-purple-300 mb-6">
-            <Sparkles className="h-4 w-4" />
-            Next-Generation AI Image Creation
-          </div>
-
-          {/* Main Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Create Stunning 
-            <br />
-            <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-              AI Images
-            </span>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Experience the power of multiple AI models in one platform. Generate, compare, and perfect your images with cutting-edge technology.
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Link href="/dashboard">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 text-lg">
-                Start Creating
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/gallery">
-              <Button variant="outline" size="lg" className="px-8 py-4 text-lg border-2">
-                Explore Gallery
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* Community Gallery Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
