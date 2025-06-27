@@ -1,10 +1,9 @@
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { supabaseAdmin } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
     // Get the authorization header
-    const authHeader = request.headers.get('authorization')
     const apiKey = request.headers.get('x-api-key')
     
     // Basic API key check (you should set this as an environment variable)
@@ -17,7 +16,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = createServerSupabaseClient()
+    const supabase = supabaseAdmin
 
     // Call the cleanup function
     const { data, error } = await supabase.rpc('cleanup_expired_images')

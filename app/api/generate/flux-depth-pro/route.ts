@@ -27,13 +27,15 @@ export async function POST(request: NextRequest) {
 
     // Handle the file output from Replicate
     let imageUrl = output
-    if (typeof output === 'string' && output.startsWith('http')) {
+    if (typeof output === 'string' && (output as string).startsWith('http')) {
       imageUrl = output
     } else if (output instanceof ReadableStream || output instanceof Uint8Array) {
       // Convert binary data to base64
       const buffer = output instanceof Uint8Array ? output : new Uint8Array(await new Response(output).arrayBuffer())
       const base64 = Buffer.from(buffer).toString('base64')
-      imageUrl = `data:image/jpeg;base64,${base64}`
+      imageUrl = {
+        url: `data:image/jpeg;base64,${base64}`
+      }
     }
 
     return NextResponse.json({
