@@ -10,7 +10,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || 'dummy-key-for-build',
 })
 
-interface FormData {
+// General Portfolio Form Data
+interface GeneralFormData {
+  mode?: 'general'
   primaryGoal: string
   targetAudience: string[]
   desiredOutcomes: string
@@ -38,6 +40,54 @@ interface FormData {
   promotionPlan: string
 }
 
+// University Application Form Data  
+interface UniversityFormData {
+  mode?: 'university'
+  fullName: string
+  email: string
+  phone: string
+  currentGrade: string
+  graduationYear: string
+  currentSchool: string
+  gpa: string
+  intendedMajor: string
+  targetUniversities: string[]
+  applicationDeadlines: string
+  careerGoals: string
+  personalStatement: string
+  coursework: string
+  academicProjects: string[]
+  researchExperience: string
+  academicHonors: string
+  standardizedTestScores: string
+  clubsOrganizations: string[]
+  leadershipRoles: string
+  volunteerWork: string
+  sportsActivities: string
+  creativeActivities: string[]
+  technicalSkills: string[]
+  softSkills: string[]
+  workExperience: string
+  internships: string
+  relevantProjects: string
+  portfolioType: string
+  requiredElements: string[]
+  submissionFormat: string[]
+  visualPresentation: string
+  writingSamples: string
+}
+
+type FormData = GeneralFormData | UniversityFormData
+
+// Type guard functions
+function isUniversityMode(data: any): data is UniversityFormData {
+  return data.mode === 'university' || 'fullName' in data || 'currentGrade' in data || 'targetUniversities' in data
+}
+
+function isGeneralMode(data: any): data is GeneralFormData {
+  return data.mode === 'general' || 'primaryGoal' in data || 'targetAudience' in data
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Check if OpenAI API key is properly configured
@@ -51,44 +101,138 @@ export async function POST(request: NextRequest) {
 
     const formData: FormData = await request.json()
 
-    // Step 1: Content Moderation - Check for inappropriate content
-    const contentToModerate = [
-      formData.desiredOutcomes,
-      formData.workSamples,
-      formData.professionalStory,
-      formData.visualStyle,
-      formData.siteStructure,
-      formData.contactFormDetails,
-      formData.accessibilityRequirements,
-      formData.contentReadability,
-      formData.seoStrategy,
-      formData.promotionPlan
-    ].filter(Boolean).join(' ')
+    // Determine mode and prepare content for moderation
+    let contentToModerate = ''
+    let userContext = ''
+    let enhancementPrompt = ''
 
-    if (contentToModerate.trim()) {
-      const moderation = await openai.moderations.create({
-        input: contentToModerate,
-      })
+    if (isUniversityMode(formData)) {
+      // Handle University Application Mode
+      contentToModerate = [
+        formData.personalStatement,
+        formData.careerGoals,
+        formData.coursework,
+        formData.researchExperience,
+        formData.academicHonors,
+        formData.leadershipRoles,
+        formData.volunteerWork,
+        formData.workExperience,
+        formData.relevantProjects,
+        formData.writingSamples
+      ].filter(Boolean).join(' ')
 
-      const flagged = moderation.results[0].flagged
-      const categories = moderation.results[0].categories
+      userContext = `
+UNIVERSITY APPLICATION PORTFOLIO REQUIREMENTS:
 
-      if (flagged) {
-        const flaggedCategories = Object.entries(categories)
-          .filter(([_, flagged]) => flagged)
-          .map(([category, _]) => category)
+PERSONAL INFORMATION:
+- Full Name: ${formData.fullName}
+- Email: ${formData.email}
+- Phone: ${formData.phone}
+- Current Grade: ${formData.currentGrade}
+- Graduation Year: ${formData.graduationYear}
+- Current School: ${formData.currentSchool}
+- GPA: ${formData.gpa}
 
-        return NextResponse.json({
-          error: 'Content Policy Violation',
-          message: 'Your input contains content that violates our content policy. Please review and modify your responses to ensure they are professional and appropriate for a portfolio website.',
-          flaggedCategories,
-          code: 'CONTENT_FLAGGED'
-        }, { status: 400 })
-      }
-    }
+UNIVERSITY APPLICATION GOALS:
+- Intended Major: ${formData.intendedMajor}
+- Target Universities: ${formData.targetUniversities.join(', ')}
+- Application Deadlines: ${formData.applicationDeadlines}
+- Career Goals: ${formData.careerGoals}
+- Personal Statement: ${formData.personalStatement}
 
-    // Step 2: Prepare comprehensive data for GPT-4 enhancement
-    const userContext = `
+ACADEMIC EXCELLENCE:
+- Coursework: ${formData.coursework}
+- Academic Projects: ${formData.academicProjects.join(', ')}
+- Research Experience: ${formData.researchExperience}
+- Academic Honors: ${formData.academicHonors}
+- Test Scores: ${formData.standardizedTestScores}
+
+EXTRACURRICULAR ACTIVITIES:
+- Clubs/Organizations: ${formData.clubsOrganizations.join(', ')}
+- Leadership Roles: ${formData.leadershipRoles}
+- Volunteer Work: ${formData.volunteerWork}
+- Sports: ${formData.sportsActivities}
+- Creative Activities: ${formData.creativeActivities.join(', ')}
+
+SKILLS & EXPERIENCE:
+- Technical Skills: ${formData.technicalSkills.join(', ')}
+- Soft Skills: ${formData.softSkills.join(', ')}
+- Work Experience: ${formData.workExperience}
+- Internships: ${formData.internships}
+- Relevant Projects: ${formData.relevantProjects}
+
+PORTFOLIO REQUIREMENTS:
+- Portfolio Type: ${formData.portfolioType}
+- Required Elements: ${formData.requiredElements.join(', ')}
+- Submission Format: ${formData.submissionFormat.join(', ')}
+- Visual Presentation: ${formData.visualPresentation}
+- Writing Samples: ${formData.writingSamples}
+      `.trim()
+
+      enhancementPrompt = `
+You are an expert college admissions consultant and educational technology specialist who creates comprehensive portfolio briefs for university applications.
+
+Based on the student's information below, create an enhanced, detailed, and professional university application portfolio brief that will help students, parents, and educators create exceptional college application materials.
+
+${userContext}
+
+CRITICAL INSTRUCTIONS FOR PRESERVING STUDENT INFORMATION:
+- PRESERVE EXACTLY all personal details: full name, email, phone, school name, GPA
+- PRESERVE EXACTLY all university names, intended major, and application deadlines
+- PRESERVE EXACTLY all project names, achievement titles, and specific accomplishments
+- PRESERVE EXACTLY all dates, timelines, and grade levels
+- PRESERVE EXACTLY all club names, organization names, and activity details
+- PRESERVE EXACTLY all course names, research topics, and academic details
+- DO NOT modify or generalize any specific student achievements or experiences
+- DO NOT change any contact information or school details
+- DO NOT alter any specific dates, scores, or numerical data
+
+Please create a comprehensive, enhanced brief that includes:
+
+1. **STUDENT PROFILE SUMMARY**: Compelling overview highlighting the student's strengths
+2. **ACADEMIC ACHIEVEMENT SHOWCASE**: Detailed presentation of academic excellence
+3. **EXTRACURRICULAR IMPACT**: Professional presentation of activities and leadership
+4. **PORTFOLIO STRUCTURE**: University-ready organization and presentation
+5. **PERSONAL NARRATIVE**: Cohesive story connecting all elements
+6. **SUBMISSION GUIDELINES**: Format requirements and presentation standards
+7. **TIMELINE & DEADLINES**: Application timeline and milestone tracking
+8. **COMPETITIVE POSITIONING**: Strategies to stand out in admissions
+9. **SUPPORTING DOCUMENTATION**: Requirements for transcripts, essays, recommendations
+10. **DIGITAL PRESENCE**: Online portfolio and social media strategy
+
+Enhancement Guidelines for University Applications:
+- Focus on academic achievement and intellectual curiosity
+- Highlight leadership, service, and extracurricular impact
+- Emphasize personal growth and development
+- Connect activities to intended major and career goals
+- Present a cohesive narrative about the student's potential
+- Include age-appropriate digital presence recommendations
+- Add safety and privacy guidelines for students under 18
+- Include guidance for parent/guardian involvement
+- Emphasize authentic self-presentation over impression management
+- Provide specific formatting for different university requirements
+
+Make the brief professional, age-appropriate, and comprehensive. Ensure it helps create an outstanding university application portfolio while keeping ALL student-specific information exactly as provided.
+
+Use markdown formatting with clear headers, bullet points, and student-friendly language. Make it suitable for high school students applying to competitive universities.
+`
+
+    } else if (isGeneralMode(formData)) {
+      // Handle General Portfolio Mode
+      contentToModerate = [
+        formData.desiredOutcomes,
+        formData.workSamples,
+        formData.professionalStory,
+        formData.visualStyle,
+        formData.siteStructure,
+        formData.contactFormDetails,
+        formData.accessibilityRequirements,
+        formData.contentReadability,
+        formData.seoStrategy,
+        formData.promotionPlan
+      ].filter(Boolean).join(' ')
+
+      userContext = `
 USER PORTFOLIO REQUIREMENTS:
 
 GOALS & OBJECTIVES:
@@ -131,11 +275,10 @@ TECHNICAL REQUIREMENTS:
 SEO & MARKETING:
 - SEO Strategy: ${formData.seoStrategy}
 - Promotion Plan: ${formData.promotionPlan}
-    `.trim()
+      `.trim()
 
-    // Step 3: Use GPT-4 to enhance the prompt
-    const enhancementPrompt = `
-You are an expert web development consultant and technical writer specializing in creating comprehensive project briefs for portfolio websites. 
+      enhancementPrompt = `
+You are an expert web development consultant and technical writer specializing in creating comprehensive project briefs for portfolio websites.
 
 Based on the user's requirements below, create an enhanced, detailed, and professional portfolio website development brief that will help developers, designers, and AI assistants create exceptional results.
 
@@ -181,12 +324,46 @@ Make the brief professional, actionable, and comprehensive. Ensure it's detailed
 Use markdown formatting with clear headers, bullet points, and professional language. Make it production-ready and enterprise-level quality.
 `
 
+    } else {
+      return NextResponse.json({
+        error: 'Invalid Data Format',
+        message: 'Unable to determine portfolio mode. Please check your form data.',
+        code: 'INVALID_MODE'
+      }, { status: 400 })
+    }
+
+    // Step 1: Content Moderation - Check for inappropriate content
+    if (contentToModerate.trim()) {
+      const moderation = await openai.moderations.create({
+        input: contentToModerate,
+      })
+
+      const flagged = moderation.results[0].flagged
+      const categories = moderation.results[0].categories
+
+      if (flagged) {
+        const flaggedCategories = Object.entries(categories)
+          .filter(([_, flagged]) => flagged)
+          .map(([category, _]) => category)
+
+        return NextResponse.json({
+          error: 'Content Policy Violation',
+          message: 'Your input contains content that violates our content policy. Please review and modify your responses to ensure they are professional and appropriate.',
+          flaggedCategories,
+          code: 'CONTENT_FLAGGED'
+        }, { status: 400 })
+      }
+    }
+
+    // Step 2: Use GPT-4 to enhance the prompt
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
         {
           role: "system",
-          content: "You are an expert web development consultant who creates comprehensive, professional project briefs for portfolio websites. Your responses are always detailed, actionable, and follow modern web development best practices."
+          content: isUniversityMode(formData) 
+            ? "You are an expert college admissions consultant who creates comprehensive, professional briefs for university application portfolios. Your responses are always student-focused, age-appropriate, and follow best practices for college admissions."
+            : "You are an expert web development consultant who creates comprehensive, professional project briefs for portfolio websites. Your responses are always detailed, actionable, and follow modern web development best practices."
         },
         {
           role: "user",
@@ -203,11 +380,12 @@ Use markdown formatting with clear headers, bullet points, and professional lang
       throw new Error('Failed to generate enhanced prompt')
     }
 
-    // Step 4: Return the enhanced prompt
+    // Step 3: Return the enhanced prompt
     return NextResponse.json({
       success: true,
       enhancedPrompt,
       originalData: formData,
+      mode: isUniversityMode(formData) ? 'university' : 'general',
       processingInfo: {
         contentModerated: true,
         promptEnhanced: true,

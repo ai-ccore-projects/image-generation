@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ExternalLink, Mail, Phone, MapPin, Clock, Sparkles, Wand2 } from "lucide-react"
+import { ExternalLink, Mail, Phone, MapPin, Clock } from "lucide-react"
 import { AutoSlidingGallery } from "@/components/gallery/auto-sliding-gallery"
 import { PortfolioShowcase } from "@/components/gallery/portfolio-showcase"
 import Link from "next/link"
@@ -9,106 +9,6 @@ import Link from "next/link"
 export default function HomePage() {
   return (
     <div className="space-y-16">
-      {/* Hero Section with Two Main Cards */}
-      <section className="py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            AICCORE NextGen AI Studio
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            Unleash your creativity with our powerful AI tools. Generate stunning images or create comprehensive portfolio prompts with ease.
-          </p>
-        </div>
-
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image Studio Card */}
-          <Link href="/dashboard">
-            <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border-2 border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto mb-4 p-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full w-20 h-20 flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
-                  <Sparkles className="h-10 w-10 text-white" />
-                </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-                  Image Studio
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-center space-y-4">
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                  Transform your ideas into stunning visuals with multiple AI models
-                </p>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>5+ AI Models Available</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                    <span>High-Quality Image Generation</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <span>Model Comparison Tools</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                    <span>Community Gallery</span>
-                  </div>
-                </div>
-                <div className="pt-4">
-                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-full group-hover:from-blue-700 group-hover:to-cyan-700 transition-all duration-300">
-                    <span className="font-semibold">Launch Studio</span>
-                    <ExternalLink className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-
-          {/* Prompt Generator Card */}
-          <Link href="/prompt-generator">
-            <Card className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border-2 border-purple-200 dark:border-purple-700 hover:border-purple-400 dark:hover:border-purple-500">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto mb-4 p-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-20 h-20 flex items-center justify-center group-hover:rotate-12 transition-transform duration-300">
-                  <Wand2 className="h-10 w-10 text-white" />
-                </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Portfolio Studio
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-center space-y-4">
-                <p className="text-lg text-gray-700 dark:text-gray-300">
-                  Complete portfolio development toolkit with AI-enhanced prompts and showcase gallery
-                </p>
-                <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span>AI-Enhanced Prompts</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                    <span>Prompt Gallery & Management</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                    <span>Portfolio Showcase</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-2 h-2 bg-pink-500 rounded-full"></div>
-                    <span>Professional Briefs</span>
-                  </div>
-                </div>
-                <div className="pt-4">
-                  <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full group-hover:from-purple-700 group-hover:to-pink-700 transition-all duration-300">
-                    <span className="font-semibold">Enter Studio</span>
-                    <Wand2 className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Link>
-        </div>
-      </section>
-
       {/* Community Gallery Slider */}
       <section className="py-8">
         <AutoSlidingGallery />

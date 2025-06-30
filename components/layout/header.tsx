@@ -3,8 +3,8 @@ import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { UserProfileModal } from "@/components/auth/user-profile"
-import { Moon, Sun, Zap, Globe, Menu, X } from "lucide-react"
+import { UserProfileModal, SignupModal } from "@/components/auth/user-profile"
+import { Moon, Sun, Zap, Globe, Menu, X, Sparkles, UserPlus, LogIn } from "lucide-react"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -114,7 +114,44 @@ export function Header() {
           </div>
 
           <div className="flex items-center space-x-6">
-            {/* Desktop Navigation - Hidden on landing page */}
+            {/* Studio Navigation for Landing Page */}
+            {isLandingPage && (
+              <nav className="hidden md:flex items-center space-x-4">
+                <Link href="/dashboard">
+                  <div className="group flex items-center gap-3 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-blue-200 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:scale-105">
+                    <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg group-hover:rotate-12 transition-transform duration-300">
+                      <Zap className="h-4 w-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                        Image Studio
+                      </h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        AI-powered image generation
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+                
+                <Link href="/prompt-generator">
+                  <div className="group flex items-center gap-3 px-4 py-2 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border border-purple-200 dark:border-purple-700 hover:border-purple-400 dark:hover:border-purple-500 transition-all duration-300 hover:scale-105">
+                    <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg group-hover:rotate-12 transition-transform duration-300">
+                      <Globe className="h-4 w-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        Portfolio Studio
+                      </h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        AI-enhanced prompts & gallery
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              </nav>
+            )}
+
+            {/* Desktop Navigation - For other pages */}
             {!isLandingPage && (
               <nav className="hidden md:flex items-center space-x-6">
                 {navigationItems.map((nav) => (
@@ -140,17 +177,15 @@ export function Header() {
                 <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
               </Button>
 
-              {/* Mobile Menu Button - Hidden on landing page */}
-              {!isLandingPage && (
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="md:hidden"
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                >
-                  {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-                </Button>
-              )}
+              {/* Mobile Menu Button */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="md:hidden"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              </Button>
 
               {user ? (
                 <UserProfileModal>
@@ -163,48 +198,118 @@ export function Header() {
                   </Button>
                 </UserProfileModal>
               ) : (
-                <Link href="/auth">
-                  <Button size="sm">Sign In</Button>
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link href="/auth">
+                    <Button variant="outline" size="sm" className="hidden sm:flex items-center gap-1">
+                      <LogIn className="h-4 w-4" />
+                      Sign In
+                    </Button>
+                  </Link>
+                  <SignupModal>
+                    <Button size="sm" className="flex items-center gap-1">
+                      <UserPlus className="h-4 w-4" />
+                      <span className="hidden sm:inline">Get Started</span>
+                      <span className="sm:hidden">Join</span>
+                    </Button>
+                  </SignupModal>
+                </div>
               )}
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Navigation Menu - Hidden on landing page */}
-      {!isLandingPage && mobileMenuOpen && (
+      {/* Mobile Navigation Menu */}
+      {mobileMenuOpen && (
         <div className="fixed top-16 left-0 right-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b md:hidden">
           <nav className="container mx-auto px-4 py-4 space-y-4">
-            {/* Studio Indicator for Mobile */}
-            {(isImageStudio && user) && (
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700">
-                <Zap className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Image Studio</span>
+            {/* Mobile Auth Buttons */}
+            {!user && (
+              <div className="space-y-2 pb-4 border-b border-gray-200 dark:border-gray-700">
+                <SignupModal>
+                  <Button size="sm" className="w-full flex items-center gap-2">
+                    <UserPlus className="h-4 w-4" />
+                    Get Started
+                  </Button>
+                </SignupModal>
+                <Link href="/auth" onClick={() => setMobileMenuOpen(false)}>
+                  <Button variant="outline" size="sm" className="w-full flex items-center gap-2">
+                    <LogIn className="h-4 w-4" />
+                    Sign In
+                  </Button>
+                </Link>
               </div>
             )}
-            {isPortfolioStudio && (
-              <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700">
-                <Globe className="h-4 w-4 text-purple-600" />
-                <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Portfolio Studio</span>
+            {/* Studio Navigation for Landing Page Mobile */}
+            {isLandingPage && (
+              <div className="space-y-3">
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 border border-blue-200 dark:border-blue-700">
+                    <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg">
+                      <Zap className="h-4 w-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-sm font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                        Image Studio
+                      </h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        AI-powered image generation
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+                
+                <Link href="/prompt-generator" onClick={() => setMobileMenuOpen(false)}>
+                  <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/30 dark:to-pink-950/30 border border-purple-200 dark:border-purple-700">
+                    <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                      <Globe className="h-4 w-4 text-white" />
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-sm font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                        Portfolio Studio
+                      </h3>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                        AI-enhanced prompts & gallery
+                      </p>
+                    </div>
+                  </div>
+                </Link>
               </div>
             )}
-            
-            {/* Navigation Links */}
-            {navigationItems.map((nav) => (
-              <Link 
-                key={nav.href} 
-                href={nav.href} 
-                className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  pathname === nav.href 
-                    ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 font-semibold' 
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                {nav.label}
-              </Link>
-            ))}
+
+            {/* Studio Indicator for Mobile - Other pages */}
+            {!isLandingPage && (
+              <>
+                {(isImageStudio && user) && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700">
+                    <Zap className="h-4 w-4 text-blue-600" />
+                    <span className="text-sm font-medium text-blue-700 dark:text-blue-300">Image Studio</span>
+                  </div>
+                )}
+                {isPortfolioStudio && (
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700">
+                    <Globe className="h-4 w-4 text-purple-600" />
+                    <span className="text-sm font-medium text-purple-700 dark:text-purple-300">Portfolio Studio</span>
+                  </div>
+                )}
+                
+                {/* Navigation Links */}
+                {navigationItems.map((nav) => (
+                  <Link 
+                    key={nav.href} 
+                    href={nav.href} 
+                    className={`block px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                      pathname === nav.href 
+                        ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 font-semibold' 
+                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {nav.label}
+                  </Link>
+                ))}
+              </>
+            )}
           </nav>
         </div>
       )}

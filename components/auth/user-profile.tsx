@@ -12,7 +12,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { User, LogOut, Save, Loader2 } from "lucide-react"
+import { User, LogOut, Save, Loader2, UserPlus } from "lucide-react"
+import { AuthForm } from "./login-form"
 
 interface UserProfile {
   id: string
@@ -24,6 +25,10 @@ interface UserProfile {
 }
 
 interface UserProfileModalProps {
+  children: React.ReactNode
+}
+
+interface SignupModalProps {
   children: React.ReactNode
 }
 
@@ -227,6 +232,36 @@ export function UserProfileModal({ children }: UserProfileModalProps) {
             )}
           </div>
         )}
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export function SignupModal({ children }: SignupModalProps) {
+  const [open, setOpen] = useState(false)
+
+  const handleSuccess = () => {
+    setOpen(false)
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {children}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <UserPlus className="h-5 w-5" />
+            Join NextGen AI Studio
+          </DialogTitle>
+          <DialogDescription>
+            Create your account to start generating amazing AI content
+          </DialogDescription>
+        </DialogHeader>
+        <div className="mt-4">
+          <AuthForm defaultTab="signup" onSuccess={handleSuccess} />
+        </div>
       </DialogContent>
     </Dialog>
   )

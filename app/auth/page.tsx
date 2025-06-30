@@ -1,7 +1,7 @@
 "use client"
 
 import { useAuth } from "@/contexts/auth-context"
-import { LoginForm } from "@/components/auth/login-form"
+import { AuthForm } from "@/components/auth/login-form"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
@@ -21,7 +21,7 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center">
-      <LoginForm />
+      <AuthForm />
     </div>
   )
 }

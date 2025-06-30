@@ -3,6 +3,7 @@ import { supabase } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
+    const requestBody = await request.json()
     const {
       title,
       formData,
@@ -12,7 +13,17 @@ export async function POST(request: NextRequest) {
       contentModerated = true,
       isPublic = false,
       tags = []
-    } = await request.json()
+    } = requestBody
+
+    console.log('Save prompt request received:', {
+      title: !!title,
+      hasFormData: !!formData,
+      hasOriginalPrompt: !!originalPrompt,
+      formDataType: typeof formData,
+      originalPromptType: typeof originalPrompt,
+      formDataKeys: formData ? Object.keys(formData) : [],
+      mode: formData?.mode
+    })
 
     // Get user from auth header or session
     const authHeader = request.headers.get('authorization')
@@ -29,44 +40,79 @@ export async function POST(request: NextRequest) {
     )
 
     if (authError || !user) {
+      console.error('Authentication error:', authError)
       return NextResponse.json({
         error: 'Unauthorized',
         message: 'Invalid authentication'
       }, { status: 401 })
     }
 
-    // Validate required fields
-    if (!formData || !originalPrompt) {
+    // Validate required fields with better error messages
+    if (!formData) {
+      console.error('Missing formData:', { formData })
       return NextResponse.json({
         error: 'Validation Error',
-        message: 'Form data and original prompt are required'
+        message: 'Form data is required'
+      }, { status: 400 })
+    }
+
+    if (!originalPrompt) {
+      console.error('Missing originalPrompt:', { originalPrompt })
+      return NextResponse.json({
+        error: 'Validation Error',
+        message: 'Original prompt is required'
+      }, { status: 400 })
+    }
+
+    // Additional validation for form data structure
+    if (typeof formData !== 'object') {
+      console.error('Invalid formData type:', typeof formData)
+      return NextResponse.json({
+        error: 'Validation Error',
+        message: 'Form data must be an object'
       }, { status: 400 })
     }
 
     // Insert prompt into database
+    const insertData = {
+      user_id: user.id,
+      title: title || 'Untitled Prompt',
+      form_data: formData,
+      original_prompt: originalPrompt,
+      enhanced_prompt: enhancedPrompt,
+      enhancement_status: enhancementStatus,
+      content_moderated: contentModerated,
+      is_public: isPublic,
+      tags
+    }
+
+    console.log('Inserting prompt with data:', {
+      user_id: insertData.user_id,
+      title: insertData.title,
+      hasFormData: !!insertData.form_data,
+      hasOriginalPrompt: !!insertData.original_prompt,
+      mode: insertData.form_data?.mode
+    })
+
     const { data: prompt, error: insertError } = await supabase
       .from('prompts')
-      .insert({
-        user_id: user.id,
-        title: title || 'Untitled Prompt',
-        form_data: formData,
-        original_prompt: originalPrompt,
-        enhanced_prompt: enhancedPrompt,
-        enhancement_status: enhancementStatus,
-        content_moderated: contentModerated,
-        is_public: isPublic,
-        tags
-      })
+      .insert(insertData)
       .select()
       .single()
 
     if (insertError) {
-      console.error('Error saving prompt:', insertError)
+      console.error('Database insert error:', insertError)
       return NextResponse.json({
         error: 'Database Error',
-        message: 'Failed to save prompt'
+        message: `Failed to save prompt: ${insertError.message}`
       }, { status: 500 })
     }
+
+    console.log('Prompt saved successfully:', {
+      id: prompt.id,
+      title: prompt.title,
+      mode: prompt.form_data?.mode
+    })
 
     return NextResponse.json({
       success: true,
