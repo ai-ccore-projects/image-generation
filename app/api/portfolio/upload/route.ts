@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     const websiteUrl = formData.get('websiteUrl') as string
     const promptId = formData.get('promptId') as string
     const isPublic = formData.get('isPublic') === 'true'
+    const isDeployed = formData.get('isDeployed') === 'true'
     const tags = JSON.parse(formData.get('tags') as string || '[]')
 
     // Get uploaded files
@@ -42,21 +43,31 @@ export async function POST(request: NextRequest) {
     }
 
     // Validate required fields
-    if (!title || !websiteUrl) {
+    if (!title) {
       return NextResponse.json({
         error: 'Validation Error',
-        message: 'Title and website URL are required'
+        message: 'Title is required'
       }, { status: 400 })
     }
 
-    // Validate URL format
-    try {
-      new URL(websiteUrl)
-    } catch {
+    // Validate website URL only if portfolio is deployed
+    if (isDeployed && !websiteUrl) {
       return NextResponse.json({
         error: 'Validation Error',
-        message: 'Invalid website URL format'
+        message: 'Website URL is required for deployed portfolios'
       }, { status: 400 })
+    }
+
+    // Validate URL format only if websiteUrl is provided
+    if (websiteUrl) {
+      try {
+        new URL(websiteUrl)
+      } catch {
+        return NextResponse.json({
+          error: 'Validation Error',
+          message: 'Invalid website URL format'
+        }, { status: 400 })
+      }
     }
 
     // Upload screenshots to storage
@@ -111,11 +122,12 @@ export async function POST(request: NextRequest) {
         prompt_id: promptId || null,
         title,
         description,
-        website_url: websiteUrl,
+        website_url: websiteUrl || null,
         screenshot_urls: screenshotUrls,
         screenshot_count: screenshotUrls.length,
         tags,
-        is_public: isPublic
+        is_public: isPublic,
+        is_deployed: isDeployed
       })
       .select()
       .single()

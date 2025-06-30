@@ -9,9 +9,10 @@ interface Portfolio {
   id: string
   title: string
   description: string
-  website_url: string
+  website_url: string | null
   screenshot_urls: string[]
   created_at: string
+  is_deployed?: boolean
 }
 
 export function PortfolioShowcase() {
@@ -204,12 +205,21 @@ export function PortfolioShowcase() {
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
-                <Globe className="h-5 w-5" />
-                <span className="font-mono text-sm">
-                  {currentPortfolio.website_url.replace(/^https?:\/\//, '')}
-                </span>
-              </div>
+              {currentPortfolio.website_url ? (
+                <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <Globe className="h-5 w-5" />
+                  <span className="font-mono text-sm">
+                    {currentPortfolio.website_url.replace(/^https?:\/\//, '')}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <Globe className="h-5 w-5" />
+                  <span className="text-sm italic">
+                    Portfolio not yet deployed
+                  </span>
+                </div>
+              )}
               <div className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
                 <Calendar className="h-5 w-5" />
                 <span className="text-sm">
@@ -219,13 +229,23 @@ export function PortfolioShowcase() {
             </div>
 
             <div className="flex gap-4">
-              <Button
-                onClick={() => window.open(currentPortfolio.website_url, '_blank')}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-              >
-                <ExternalLink className="h-4 w-4 mr-2" />
-                Visit Portfolio
-              </Button>
+              {currentPortfolio.website_url ? (
+                <Button
+                  onClick={() => window.open(currentPortfolio.website_url!, '_blank')}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Visit Portfolio
+                </Button>
+              ) : (
+                <Button
+                  disabled
+                  className="bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
+                >
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Not Yet Deployed
+                </Button>
+              )}
               <Button variant="outline" asChild>
                 <a href="/portfolio-gallery">View All Portfolios</a>
               </Button>

@@ -21,7 +21,7 @@ interface Portfolio {
   id: string
   title: string
   description: string
-  website_url: string
+  website_url: string | null
   screenshot_urls: string[]
   screenshot_count: number
   tags?: string[]
@@ -33,6 +33,7 @@ interface Portfolio {
   username?: string
   display_name?: string
   avatar_url?: string
+  is_deployed?: boolean
 }
 
 interface PortfolioGalleryProps {
@@ -544,10 +545,16 @@ export function PortfolioGallery({
               {/* URL */}
               <div className="flex items-center gap-2">
                 <Globe className="h-4 w-4 text-gray-400 flex-shrink-0" />
-                <span className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer truncate" 
-                      onClick={() => window.open(portfolio.website_url, '_blank')}>
-                  {portfolio.website_url.replace(/^https?:\/\//, '')}
-                </span>
+                {portfolio.website_url ? (
+                  <span className="text-sm text-blue-600 hover:text-blue-700 cursor-pointer truncate" 
+                        onClick={() => window.open(portfolio.website_url!, '_blank')}>
+                    {portfolio.website_url.replace(/^https?:\/\//, '')}
+                  </span>
+                ) : (
+                  <span className="text-sm text-gray-500 italic truncate">
+                    Portfolio not yet deployed
+                  </span>
+                )}
               </div>
 
               {/* Action Buttons */}
@@ -577,7 +584,8 @@ export function PortfolioGallery({
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => window.open(portfolio.website_url, '_blank')}
+                    onClick={() => portfolio.website_url && window.open(portfolio.website_url, '_blank')}
+                    disabled={!portfolio.website_url}
                     className="flex items-center gap-1"
                   >
                     <ExternalLink className="h-4 w-4" />
@@ -843,15 +851,19 @@ export function PortfolioGallery({
 
                   <div>
                     <h4 className="font-semibold text-lg mb-2">Website</h4>
-                    <a 
-                      href={selectedPortfolio.website_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-700 underline flex items-center gap-2"
-                    >
-                      {selectedPortfolio.website_url}
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                    {selectedPortfolio.website_url ? (
+                      <a 
+                        href={selectedPortfolio.website_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:text-blue-700 underline flex items-center gap-2"
+                      >
+                        {selectedPortfolio.website_url}
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    ) : (
+                      <span className="text-gray-500 italic">Portfolio not yet deployed</span>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between">
@@ -870,10 +882,11 @@ export function PortfolioGallery({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => window.open(selectedPortfolio.website_url, '_blank')}
+                        onClick={() => selectedPortfolio.website_url && window.open(selectedPortfolio.website_url, '_blank')}
+                        disabled={!selectedPortfolio.website_url}
                       >
                         <ExternalLink className="h-4 w-4 mr-2" />
-                        Visit
+                        {selectedPortfolio.website_url ? 'Visit' : 'Not Deployed'}
                       </Button>
                     </div>
                   </div>

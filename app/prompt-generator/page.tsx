@@ -214,7 +214,8 @@ export default function PromptGeneratorPage() {
     description: '',
     websiteUrl: '',
     tags: [] as string[],
-    isPublic: false
+    isPublic: false,
+    isDeployed: true
   })
   const [screenshots, setScreenshots] = useState<File[]>([])
   const [isUploading, setIsUploading] = useState(false)
@@ -1310,14 +1311,90 @@ export default function PromptGeneratorPage() {
     setScreenshots(prev => prev.filter((_, i) => i !== index))
   }
 
+  // Add URL validation and formatting helper
+  const formatUrl = (url: string): string => {
+    if (!url.trim()) return url
+    
+    // Remove any whitespace
+    const trimmedUrl = url.trim()
+    
+    // If it already has a protocol, return as is
+    if (trimmedUrl.startsWith('http://') || trimmedUrl.startsWith('https://')) {
+      return trimmedUrl
+    }
+    
+    // Auto-prepend https:// if missing
+    return `https://${trimmedUrl}`
+  }
+
+  const validateUrl = (url: string): { isValid: boolean; message?: string } => {
+    // If portfolio is not deployed, URL is optional
+    if (!portfolioData.isDeployed) {
+      return { isValid: true }
+    }
+    
+    if (!url.trim()) {
+      return { isValid: false, message: 'Website URL is required for deployed portfolios' }
+    }
+
+    try {
+      const formattedUrl = formatUrl(url)
+      new URL(formattedUrl)
+      return { isValid: true }
+    } catch {
+      return { isValid: false, message: 'Please enter a valid website URL (e.g., example.com or https://example.com)' }
+    }
+  }
+
+  const handleUrlChange = (url: string) => {
+    setPortfolioData(prev => ({ ...prev, websiteUrl: url }))
+  }
+
+  const handleUrlBlur = () => {
+    if (portfolioData.websiteUrl.trim()) {
+      const formattedUrl = formatUrl(portfolioData.websiteUrl)
+      setPortfolioData(prev => ({ ...prev, websiteUrl: formattedUrl }))
+    }
+  }
+
+  const isFormValid = () => {
+    if (!portfolioData.title) return false
+    if (portfolioData.isDeployed && !portfolioData.websiteUrl) return false
+    if (portfolioData.isDeployed && portfolioData.websiteUrl && !validateUrl(portfolioData.websiteUrl).isValid) return false
+    return true
+  }
+
   const showPrivacyConfirmation = () => {
-    if (!user || !portfolioData.title || !portfolioData.websiteUrl) {
+    if (!user || !portfolioData.title) {
       toast({
         title: "Missing Information",
-        description: "Please fill in the title and website URL.",
+        description: "Please fill in the title.",
         variant: "destructive",
       })
       return
+    }
+
+    // For deployed portfolios, validate URL
+    if (portfolioData.isDeployed) {
+      if (!portfolioData.websiteUrl) {
+        toast({
+          title: "Missing Information",
+          description: "Please fill in the website URL for deployed portfolios.",
+          variant: "destructive",
+        })
+        return
+      }
+
+      // Validate URL before proceeding
+      const urlValidation = validateUrl(portfolioData.websiteUrl)
+      if (!urlValidation.isValid) {
+        toast({
+          title: "Invalid URL",
+          description: urlValidation.message,
+          variant: "destructive",
+        })
+        return
+      }
     }
     
     // Reset privacy dialog state
@@ -1340,10 +1417,14 @@ export default function PromptGeneratorPage() {
     setIsUploading(true)
 
     try {
+      // Ensure URL is properly formatted (only if portfolio is deployed and URL exists)
+      const formattedUrl = portfolioData.isDeployed && portfolioData.websiteUrl ? formatUrl(portfolioData.websiteUrl) : ''
+      
       const formData = new FormData()
       formData.append('title', portfolioData.title)
       formData.append('description', portfolioData.description)
-      formData.append('websiteUrl', portfolioData.websiteUrl)
+      formData.append('websiteUrl', formattedUrl)
+      formData.append('isDeployed', portfolioData.isDeployed.toString())
       formData.append('promptId', (selectedPromptForPortfolio && selectedPromptForPortfolio !== "none") ? selectedPromptForPortfolio : '')
       formData.append('isPublic', portfolioData.isPublic.toString())
       formData.append('tags', JSON.stringify(portfolioData.tags))
@@ -1382,14 +1463,24 @@ export default function PromptGeneratorPage() {
           description: '',
           websiteUrl: '',
           tags: [],
-          isPublic: false
+          isPublic: false,
+          isDeployed: true
         })
         setScreenshots([])
         setSelectedPromptForPortfolio("none")
         setAgreedToPrivacy(false)
         setIsUnder18(null)
       } else {
-        throw new Error(result.message)
+        // Handle specific error cases
+        if (result.message?.includes('Invalid website URL format')) {
+          toast({
+            title: "Invalid Website URL",
+            description: "Please check your website URL format. Make sure it's accessible and includes the protocol (https://).",
+            variant: "destructive",
+          })
+        } else {
+          throw new Error(result.message)
+        }
       }
     } catch (error) {
       console.error('Error uploading portfolio:', error)
@@ -2889,13 +2980,52 @@ export default function PromptGeneratorPage() {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="websiteUrl">Website URL *</Label>
+                      <Label htmlFor="websiteUrl">
+                        Website URL {portfolioData.isDeployed ? '*' : '(Optional - Not Yet Deployed)'}
+                      </Label>
                       <Input
                         id="websiteUrl"
-                        placeholder="https://yourportfolio.com"
+                        placeholder={portfolioData.isDeployed ? "example.com or https://example.com" : "Leave empty if not deployed yet"}
                         value={portfolioData.websiteUrl}
-                        onChange={(e) => setPortfolioData(prev => ({ ...prev, websiteUrl: e.target.value }))}
+                        onChange={(e) => handleUrlChange(e.target.value)}
+                        onBlur={handleUrlBlur}
+                        disabled={!portfolioData.isDeployed}
+                        className={`${!portfolioData.isDeployed ? 'bg-gray-100 dark:bg-gray-800' : ''} ${!portfolioData.websiteUrl ? '' : validateUrl(portfolioData.websiteUrl).isValid ? 'border-green-500' : 'border-red-500'}`}
                       />
+                      {portfolioData.websiteUrl && !validateUrl(portfolioData.websiteUrl).isValid && (
+                        <p className="text-xs text-red-600 mt-1">
+                          {validateUrl(portfolioData.websiteUrl).message}
+                        </p>
+                      )}
+                      {portfolioData.websiteUrl && validateUrl(portfolioData.websiteUrl).isValid && (
+                        <p className="text-xs text-green-600 mt-1">
+                          ✓ Valid website URL
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500">
+                        {portfolioData.isDeployed ? 
+                          "Enter your portfolio website URL. https:// will be added automatically if missing." :
+                          "URL field is disabled because portfolio is not yet deployed."
+                        }
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          id="notDeployed"
+                          checked={!portfolioData.isDeployed}
+                          onCheckedChange={(checked) => setPortfolioData(prev => ({ 
+                            ...prev, 
+                            isDeployed: !checked,
+                            websiteUrl: checked ? '' : prev.websiteUrl // Clear URL when marking as not deployed
+                          }))}
+                        />
+                        <Label htmlFor="notDeployed">Portfolio not yet deployed</Label>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Check this if you're still working on your portfolio and don't have a live website URL yet.
+                      </p>
                     </div>
 
                     <div className="space-y-2">
@@ -2989,7 +3119,7 @@ export default function PromptGeneratorPage() {
                   
                   <Button
                     onClick={showPrivacyConfirmation}
-                    disabled={isUploading || !portfolioData.title || !portfolioData.websiteUrl}
+                    disabled={isUploading || !isFormValid()}
                     className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                   >
                     {isUploading ? (
@@ -3016,7 +3146,8 @@ export default function PromptGeneratorPage() {
                     <li>• Upload clear screenshots showing different pages/sections</li>
                     <li>• Include homepage, about, portfolio, and contact pages</li>
                     <li>• Show both desktop and mobile views if possible</li>
-                    <li>• Make sure your website URL is publicly accessible</li>
+                    <li>• Check "Portfolio not yet deployed" if you're still working on it</li>
+                    <li>• Make sure your website URL is publicly accessible (if deployed)</li>
                     <li>• View all your uploads on the Portfolio Gallery page</li>
                     <li>• Link portfolios to saved prompts for better organization</li>
                   </ul>
