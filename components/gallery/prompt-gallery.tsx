@@ -460,9 +460,9 @@ export function PromptGallery() {
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
             <DialogHeader>
-              <DialogTitle className="flex items-center justify-between">
+              <DialogTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                 <span className="truncate">{selectedPrompt?.title}</span>
-                <div className="flex items-center gap-2 ml-4">
+                <div className="flex items-center gap-2 self-start sm:self-auto">
                   {selectedPrompt?.enhanced_prompt && (
                     <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
                       <Button

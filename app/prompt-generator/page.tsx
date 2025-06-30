@@ -2308,7 +2308,7 @@ export default function PromptGeneratorPage() {
             {/* Mode Toggle */}
             <Card className="mb-8 bg-white/80 backdrop-blur-sm dark:bg-gray-800/80 border-2 border-white/20 shadow-2xl shadow-purple-500/10 dark:shadow-purple-500/20 rounded-2xl">
               <CardHeader className="pb-4">
-                <CardTitle className="flex items-center justify-between">
+                <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center">
                       <User className="h-5 w-5 text-white" />
@@ -2532,7 +2532,7 @@ export default function PromptGeneratorPage() {
                 <div className="lg:col-span-3">
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
+                      <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center gap-3">
                           <span className="text-2xl">{getCurrentSections()[currentSection].icon}</span>
                           <div>
@@ -2544,7 +2544,7 @@ export default function PromptGeneratorPage() {
                         </div>
                         
                         {/* Demo Buttons */}
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 self-start sm:self-auto">
                           <Button
                             variant="outline"
                             size="sm"
@@ -2684,7 +2684,7 @@ export default function PromptGeneratorPage() {
                   {/* Original Prompt */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
+                      <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <span className="flex items-center gap-2">
                           <Wand2 className="h-5 w-5 text-gray-600" />
                           Your Original Input
@@ -2693,6 +2693,7 @@ export default function PromptGeneratorPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => copyToClipboard('original')}
+                          className="self-start sm:self-auto"
                         >
                           {copied.original ? (
                             <>
@@ -2718,7 +2719,7 @@ export default function PromptGeneratorPage() {
                   {/* Enhanced Prompt */}
                   <Card>
                     <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
+                      <CardTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <span className="flex items-center gap-2">
                           <Shield className="h-5 w-5 text-purple-600" />
                           AI-Enhanced Brief
@@ -2727,7 +2728,7 @@ export default function PromptGeneratorPage() {
                           variant="outline"
                           size="sm"
                           onClick={() => copyToClipboard('enhanced')}
-                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+                          className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 self-start sm:self-auto"
                         >
                           {copied.enhanced ? (
                             <>
