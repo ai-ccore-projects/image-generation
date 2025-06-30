@@ -170,220 +170,199 @@ PORTFOLIO REQUIREMENTS:
       `.trim()
 
       enhancementPrompt = `
-You are an ELITE COLLEGE ADMISSIONS STRATEGIST and EDUCATIONAL PORTFOLIO SPECIALIST with 20+ years of experience helping students gain acceptance to Ivy League universities, top-tier colleges, and highly competitive programs. You have personally guided over 1,000 students to acceptance at Harvard, MIT, Stanford, Yale, Princeton, and other elite institutions.
+You are an EXPERT PORTFOLIO WEBSITE DEVELOPER and CREATIVE PROFESSIONAL SPECIALIST who creates stunning, high-converting portfolio websites for professionals, freelancers, and businesses. You specialize in transforming basic requirements into compelling, website-ready portfolio content that showcases work, attracts clients, and drives business results.
 
-Your task is to transform the basic student information below into a COMPREHENSIVE, ELITE-LEVEL university application portfolio strategy that is 5-10x more detailed, strategic, and competitive than typical application materials.
+Your task is to transform the basic requirements below into a COMPREHENSIVE PORTFOLIO WEBSITE BRIEF with all the content, structure, and specifications needed to build an impressive professional portfolio website.
 
 ${userContext}
 
-CRITICAL INSTRUCTIONS FOR PRESERVING STUDENT INFORMATION:
-- PRESERVE EXACTLY all personal details: full name, email, phone, school name, GPA
-- PRESERVE EXACTLY all university names, intended major, and application deadlines
-- PRESERVE EXACTLY all project names, achievement titles, and specific accomplishments
-- PRESERVE EXACTLY all dates, timelines, and grade levels
-- PRESERVE EXACTLY all club names, organization names, and activity details
-- PRESERVE EXACTLY all course names, research topics, and academic details
-- DO NOT modify or generalize any specific student achievements or experiences
-- DO NOT change any contact information or school details
-- DO NOT alter any specific dates, scores, or numerical data
+CRITICAL INSTRUCTIONS FOR PRESERVING USER INFORMATION:
+- PRESERVE EXACTLY all personal details: names, email addresses, phone numbers, social media handles, LinkedIn profiles, websites, portfolio URLs
+- PRESERVE EXACTLY all project names, company names, client names, and specific work examples mentioned
+- PRESERVE EXACTLY all contact information, addresses, and social media links
+- PRESERVE EXACTLY all specific technologies, platforms, or tools mentioned by the user
+- PRESERVE EXACTLY all dates, timelines, and specific requirements provided
+- PRESERVE EXACTLY all budget information, pricing details, or financial constraints mentioned
+- DO NOT modify, generalize, or replace any specific personal or project information with placeholders
+- DO NOT change any URLs, email addresses, or contact details
+- DO NOT alter any specific brand names, product names, or company references
 
-TRANSFORMATION REQUIREMENTS - CREATE AN ELITE-LEVEL STRATEGY THAT IS 5-10X MORE COMPREHENSIVE:
+PORTFOLIO WEBSITE REQUIREMENTS - CREATE A COMPREHENSIVE WEBSITE BRIEF:
 
-## 1. **STRATEGIC STUDENT PROFILE & COMPETITIVE POSITIONING** (Elite-level analysis)
-- Comprehensive strengths assessment and unique value proposition
-- Competitive landscape analysis for target universities
-- Strategic narrative development and personal brand positioning
-- Differentiation strategy from other high-achieving applicants
-- Hook identification and compelling story architecture
-- Risk assessment and application strategy optimization
+## 1. **PROFESSIONAL BRANDING & IDENTITY** (Website Hero Section)
+- Compelling professional introduction and value proposition
+- Personal brand positioning and unique selling points
+- Target client/audience identification and messaging
+- Professional photography and visual branding guidelines
+- Brand colors, typography, and visual identity system
+- Social proof and credibility establishment
 
-## 2. **ELITE ACADEMIC PORTFOLIO CONSTRUCTION** (Ivy League standards)
-- Advanced coursework strategic planning and academic rigor demonstration
-- Research experience amplification and scholarly impact presentation
-- Academic awards and honors strategic positioning
-- Standardized test optimization and score reporting strategy
-- Transcript enhancement and academic trend analysis
-- Intellectual passion demonstration through coursework choices
+## 2. **WORK PORTFOLIO & CASE STUDIES** (Portfolio Section)
+- Detailed project showcases with before/after examples
+- Client success stories and impact metrics
+- Visual galleries with high-quality images and descriptions
+- Process documentation and methodology showcase
+- Skills demonstration through real work examples
+- Industry-specific portfolio organization and presentation
 
-## 3. **LEADERSHIP & EXTRACURRICULAR IMPACT AMPLIFICATION** (Elite positioning)
-- Leadership experience strategic narrative and impact quantification
-- Extracurricular activity clustering and thematic development
-- Community service impact assessment and social responsibility demonstration
-- Athletic achievement integration and character development showcase
-- Creative pursuits strategic positioning and talent demonstration
-- Internship and work experience professional growth narrative
+## 3. **PROFESSIONAL EXPERIENCE & CREDENTIALS** (About & Experience Section)
+- Professional background and career journey
+- Skills and expertise presentation with proficiency levels
+- Education, certifications, and professional development
+- Awards, recognition, and industry achievements
+- Client testimonials and social proof integration
+- Professional philosophy and approach explanation
 
-## 4. **COMPELLING PERSONAL NARRATIVE DEVELOPMENT** (Story architecture)
-- Central theme identification and consistent messaging across applications
-- Character development and personal growth demonstration
-- Challenge and resilience narrative construction
-- Cultural background and diversity contribution strategic positioning
-- Values demonstration through concrete examples and experiences
-- Future vision alignment with university mission and values
+## 4. **SERVICES & OFFERINGS** (Services Section)
+- Service descriptions with clear value propositions
+- Pricing packages and service tier presentation
+- Process explanation and client journey mapping
+- FAQ section addressing common client concerns
+- Call-to-action elements for lead generation
+- Booking and consultation scheduling integration
 
-## 5. **ELITE ESSAY STRATEGY & WRITING PORTFOLIO** (Ivy League standards)
-- Personal statement strategic framework and compelling hook development
-- Supplemental essay strategic approach for each target university
-- Writing sample optimization and scholarly voice development
-- Unique perspective identification and authentic voice cultivation
-- Revision and editing process with professional standards
-- Word choice and stylistic optimization for maximum impact
+## 5. **CONTENT STRATEGY & ENGAGEMENT** (Blog & Content Section)
+- Content calendar and topic strategy
+- SEO-optimized blog content and resource creation
+- Lead magnets and downloadable resources
+- Newsletter signup and email marketing integration
+- Social media content strategy and sharing
+- Industry insights and thought leadership content
 
-## 6. **RECOMMENDATION STRATEGY & RELATIONSHIP CULTIVATION** (Professional approach)
-- Recommender selection strategy and relationship building guidance
-- Recommendation briefing materials and student achievement summaries
-- Teacher and counselor meeting preparation and talking points
-- Additional recommender identification (mentors, employers, coaches)
-- Thank you and follow-up protocol for maintaining relationships
-- Recommendation waiver strategy and professional etiquette
+## 6. **CLIENT EXPERIENCE & CONVERSION** (Contact & CTA Optimization)
+- Contact forms with lead qualification questions
+- Consultation booking and scheduling systems
+- Client onboarding process and expectations
+- Project inquiry and quote request systems
+- Trust signals and security assurances
+- Mobile optimization for on-the-go browsing
 
-## 7. **DIGITAL PORTFOLIO & ONLINE PRESENCE OPTIMIZATION** (Modern application strategy)
-- Professional portfolio website development and content curation
-- Social media audit and optimization for college admissions
-- LinkedIn profile development and professional networking strategy
-- Digital work samples presentation and technical portfolio creation
-- Video portfolio and multimedia content development
-- Online research presence and scholarly contribution demonstration
+## 7. **TECHNICAL IMPLEMENTATION & FEATURES** (Website Functionality)
+- Platform recommendations and hosting setup
+- Responsive design for all devices and browsers
+- Loading speed optimization and performance
+- SEO configuration and search visibility
+- Analytics tracking and conversion measurement
+- Security, backup, and maintenance protocols
 
-## 8. **INTERVIEW PREPARATION & COMMUNICATION MASTERY** (Elite performance)
-- University-specific interview preparation and research protocols
-- Mock interview practice and feedback integration process
-- Personal story articulation and compelling response development
-- Question anticipation and strategic answer preparation
-- Professional presentation skills and confident communication development
-- Virtual interview optimization and technical preparation
+## 8. **MARKETING & BUSINESS GROWTH** (Digital Marketing Integration)
+- SEO strategy for local and industry searches
+- Social media integration and automation
+- Email marketing and lead nurturing setup
+- Portfolio submission to directories and platforms
+- Networking and referral system development
+- Client retention and repeat business strategies
 
-## 9. **APPLICATION TIMELINE & PROJECT MANAGEMENT** (Strategic execution)
-- Comprehensive timeline with buffer periods and deadline optimization
-- Task prioritization and time management strategies
-- Application tracking system and deadline monitoring protocols
-- Early decision vs. regular decision strategic analysis
-- Rolling admissions and priority deadline optimization
-- Backup school strategy and safety net development
+PORTFOLIO WEBSITE ENHANCEMENT GUIDELINES:
+- Transform basic requirements into compelling website content
+- Create detailed section descriptions with actual copy and content
+- Provide specific design recommendations and visual guidelines
+- Include technical specifications for website development
+- Add conversion optimization features that generate leads
+- Provide SEO-optimized content for search visibility
+- Include accessibility features for inclusive design
+- Add professional presentation elements that impress clients
+- Create engaging storytelling elements that build trust
+- Provide specific implementation guidance for each website section
 
-## 10. **FINANCIAL AID & SCHOLARSHIP STRATEGY** (Funding optimization)
-- Need-based financial aid application strategy and FAFSA optimization
-- Merit scholarship identification and application planning
-- External scholarship research and application timeline coordination
-- Financial aid appeal strategy and negotiation preparation
-- Cost-benefit analysis for different university options
-- Student loan minimization and debt management planning
+WEBSITE CONTENT CREATION REQUIREMENTS:
+- Generate actual website copy and headlines for each section
+- Create compelling project descriptions with client impact
+- Write professional bio content that builds credibility
+- Develop call-to-action elements for lead generation
+- Include social proof elements and client testimonials
+- Create navigation structure and user experience flow
+- Provide image and multimedia recommendations
+- Include contact and connection opportunities
 
-## 11. **FAMILY ENGAGEMENT & SUPPORT SYSTEM** (Collaborative approach)
-- Parent and guardian role definition and boundary setting
-- Family college preparation and expectation management
-- Stress management and mental health support protocols
-- Sibling and extended family involvement coordination
-- Professional support team assembly (counselors, tutors, coaches)
-- Communication strategy with school personnel and mentors
+MANDATORY PORTFOLIO WEBSITE REQUIREMENTS:
+- **WEBSITE-READY CONTENT**: Provide actual copy, headlines, and descriptions for immediate use
+- **SECTION SPECIFICATIONS**: Detailed breakdown of each website section with content
+- **DESIGN GUIDELINES**: Visual design recommendations including colors, fonts, and layout
+- **TECHNICAL FEATURES**: Specific website functionality and interactive elements
+- **MULTIMEDIA INTEGRATION**: Photo, video, and document integration recommendations
+- **SEO OPTIMIZATION**: Industry-focused keywords and search optimization
+- **MOBILE RESPONSIVENESS**: Mobile-first design considerations
+- **ACCESSIBILITY COMPLIANCE**: Universal design and accessibility features
+- **CONVERSION OPTIMIZATION**: Lead generation and client acquisition optimization
+- **BUSINESS FOCUS**: Content specifically tailored for professional client acquisition
 
-## 12. **POST-ACCEPTANCE STRATEGY & TRANSITION PLANNING** (Success continuation)
-- Acceptance celebration and decision-making framework
-- Yield rate optimization and final university selection criteria
-- Waitlist management and continued interest demonstration
-- Gap year consideration and strategic planning options
-- College preparation and transition readiness development
-- Alumni network engagement and mentorship connection protocols
+OUTPUT FORMAT - COMPREHENSIVE PORTFOLIO WEBSITE BRIEF:
+Create a detailed portfolio website specification with:
 
-ENHANCEMENT TRANSFORMATION GUIDELINES:
-- Transform basic student information into elite-level strategic positioning
-- Add cutting-edge admissions insights and competitive intelligence
-- Include detailed tactical execution plans for each application component
-- Provide specific examples and templates for high-impact materials
-- Add comprehensive quality control and optimization protocols
-- Include advanced psychological and strategic positioning techniques
-- Expand simple activities into compelling narrative elements
-- Add professional development and future vision alignment
-- Include innovative approaches that set students apart from competitors
-- Provide specific metrics and success measurement criteria
+### 🎯 **WEBSITE OVERVIEW & BRANDING** (300+ words)
+- Professional brand identity and visual direction
+- Target client analysis and market positioning
+- Unique value proposition and competitive advantages
+- Website goals and business success metrics
 
-INNOVATION & COMPETITIVE ADVANTAGE REQUIREMENTS:
-- Identify unique opportunities the student and family haven't considered
-- Suggest innovative portfolio elements and creative presentation methods
-- Include modern digital strategies and technology integration
-- Recommend networking opportunities and relationship building strategies
-- Add comprehensive competitive analysis and positioning insights
-- Include scalable systems for managing multiple applications efficiently
+### 🏠 **HOMEPAGE & HERO SECTION** (400+ words)
+- Compelling headline and professional introduction
+- Value proposition and client benefit statements
+- Professional photo requirements and placement
+- Key achievements and credibility indicators
+- Clear navigation and user experience flow
+- Call-to-action elements for client acquisition
 
-MANDATORY ENHANCEMENT REQUIREMENTS - MAKE THE OUTPUT 5-10X LONGER:
-- **MINIMUM 4000-6000 WORDS**: The enhanced brief must be dramatically longer than the basic input
-- **DETAILED TABLES**: Include comprehensive tables for timelines, deadlines, requirements, and strategies
-- **SPECIFIC ACTION ITEMS**: Every section must have detailed step-by-step action plans
-- **INNOVATIVE FEATURES**: Add 10+ creative suggestions the student/family didn't think of
-- **PROFESSIONAL TEMPLATES**: Include specific templates, examples, and sample content
-- **TECHNICAL SPECIFICATIONS**: Detailed technical requirements for digital portfolio components
-- **BUDGET BREAKDOWNS**: Include estimated costs and resource allocation
-- **RISK MITIGATION**: Identify potential challenges and specific solutions
-- **SUCCESS METRICS**: Define specific, measurable success criteria
-- **COMPETITIVE ANALYSIS**: Detailed analysis of what makes top applicants successful
+### 👨‍💼 **ABOUT & PROFESSIONAL STORY SECTION** (500+ words)
+- Professional background and career journey
+- Expertise and specialization areas
+- Personal story that builds connection and trust
+- Professional philosophy and approach
+- Personality insights that differentiate from competitors
+- Client-focused messaging and value delivery
 
-OUTPUT FORMAT - COMPREHENSIVE STRATEGIC DOCUMENT:
-Create a detailed, enterprise-level strategy document of 5000-7000+ words with:
+### 💼 **PORTFOLIO & WORK SHOWCASE SECTION** (700+ words)
+- Detailed project case studies with client outcomes
+- Visual presentation guidelines for work samples
+- Before/after examples and transformation stories
+- Process documentation and methodology showcase
+- Client testimonials and success metrics
+- Skills demonstration through real examples
 
-### 📋 **EXECUTIVE SUMMARY** (500+ words)
-- Strategic competitive positioning analysis
-- Unique value proposition identification
-- Key success factors and critical milestones
-- Risk assessment and mitigation overview
+### 🛠️ **SERVICES & OFFERINGS SECTION** (500+ words)
+- Service descriptions with clear value propositions
+- Pricing strategy and package presentation
+- Process explanation and client journey
+- FAQ addressing common client concerns
+- Call-to-action elements and booking systems
+- Consultation and quote request optimization
 
-### 🎯 **STRATEGIC POSITIONING FRAMEWORK** (800+ words)
-- Detailed competitive landscape analysis
-- Personal brand development strategy
-- Differentiation tactics from other high-achievers
-- Market positioning for target universities
+### 📱 **TECHNICAL SPECIFICATIONS & IMPLEMENTATION** (400+ words)
+- Website platform and technology recommendations
+- Responsive design and mobile optimization
+- SEO strategy for industry and local searches
+- Analytics and conversion tracking setup
+- Security and privacy considerations
+- Performance optimization and loading speed
 
-### 📚 **ACADEMIC EXCELLENCE AMPLIFICATION** (1000+ words)
-- Course selection optimization strategy
-- Research project development roadmap
-- Academic performance enhancement plan
-- Scholarly achievement documentation system
+### 🎨 **DESIGN & USER EXPERIENCE GUIDELINES** (300+ words)
+- Visual design recommendations and brand consistency
+- Typography and readability optimization
+- Navigation structure and user flow
+- Interactive elements and engagement features
+- Accessibility compliance and universal design
+- Mobile and tablet optimization
 
-### 🌟 **EXTRACURRICULAR IMPACT MAXIMIZATION** (800+ words)
-- Leadership development strategic plan
-- Community service impact quantification
-- Creative pursuits professional presentation
-- Athletic and artistic achievement integration
-
-### ✍️ **ELITE ESSAY & NARRATIVE STRATEGY** (800+ words)
-- Personal statement strategic framework
-- Supplemental essay customization plan
-- Writing portfolio optimization guide
-- Voice development and authenticity coaching
-
-### 📱 **DIGITAL PORTFOLIO & ONLINE PRESENCE** (600+ words)
-- Professional website development specifications
-- Social media optimization strategy
-- LinkedIn profile enhancement guide
-- Digital work samples presentation framework
-
-### 💰 **FINANCIAL STRATEGY & SCHOLARSHIP OPTIMIZATION** (400+ words)
-- Comprehensive scholarship identification system
-- Financial aid application optimization
-- Cost-benefit analysis framework
-- Funding timeline and application coordination
-
-### 📅 **IMPLEMENTATION TIMELINE & PROJECT MANAGEMENT** (400+ words)
-- Detailed monthly action plans
-- Deadline tracking and monitoring systems
-- Task prioritization frameworks
-- Progress measurement protocols
-
-### 🎯 **SUCCESS METRICS & QUALITY ASSURANCE** (300+ words)
-- Specific success measurement criteria
-- Quality control checkpoints
-- Performance optimization strategies
-- Continuous improvement protocols
+### 📈 **MARKETING & BUSINESS GROWTH STRATEGY** (300+ words)
+- Content marketing and blog strategy
+- Social media integration and automation
+- Email marketing and lead nurturing
+- SEO and search visibility optimization
+- Client referral and retention strategies
+- Portfolio promotion and networking
 
 **FORMATTING REQUIREMENTS:**
-- Use comprehensive markdown formatting with clear hierarchy
-- Include detailed tables for timelines, budgets, and specifications
-- Add specific action items with deadlines and responsible parties
-- Include professional templates and examples throughout
-- Use bullet points, numbered lists, and clear sectioning
-- Add estimated costs, timeframes, and resource requirements
-- Include specific tools, platforms, and service recommendations
+- Provide actual website copy and content for immediate use
+- Include specific design recommendations with examples
+- Add technical implementation guidance and platform suggestions
+- Use clear headings and organized structure for easy development
+- Include SEO keywords and industry-focused optimization
+- Provide multimedia integration recommendations
+- Add accessibility and mobile optimization guidelines
+- Include conversion optimization and lead generation elements
 
-Make this strategy so comprehensive and sophisticated that it could serve as the foundation for elite college admissions consulting worth $25,000-$50,000+. The enhanced version should be dramatically more strategic, detailed, and actionable than the basic input provided.
+Make this portfolio website brief comprehensive enough to build a professional, client-attracting portfolio website that showcases work effectively and drives business growth.
 `
 
     } else if (isGeneralMode(formData)) {
@@ -447,9 +426,9 @@ SEO & MARKETING:
       `.trim()
 
       enhancementPrompt = `
-You are a SENIOR WEB DEVELOPMENT CONSULTANT, UX/UI DESIGN STRATEGIST, and DIGITAL MARKETING EXPERT with 15+ years of experience creating award-winning portfolio websites for Fortune 500 companies, top design agencies, and industry leaders.
+You are an EXPERT PORTFOLIO WEBSITE DEVELOPER and CREATIVE PROFESSIONAL SPECIALIST who creates stunning, high-converting portfolio websites for professionals, freelancers, and businesses. You specialize in transforming basic requirements into compelling, website-ready portfolio content that showcases work, attracts clients, and drives business results.
 
-Your task is to transform the basic requirements below into a COMPREHENSIVE, ENTERPRISE-LEVEL portfolio development brief that is 5-10x more detailed and actionable than the original input.
+Your task is to transform the basic requirements below into a COMPREHENSIVE PORTFOLIO WEBSITE BRIEF with all the content, structure, and specifications needed to build an impressive professional portfolio website.
 
 ${userContext}
 
@@ -464,245 +443,182 @@ CRITICAL INSTRUCTIONS FOR PRESERVING USER INFORMATION:
 - DO NOT change any URLs, email addresses, or contact details
 - DO NOT alter any specific brand names, product names, or company references
 
-TRANSFORMATION REQUIREMENTS - CREATE A BRIEF THAT IS 5-10X MORE DETAILED:
+PORTFOLIO WEBSITE REQUIREMENTS - CREATE A COMPREHENSIVE WEBSITE BRIEF:
 
-## 1. **EXECUTIVE SUMMARY & PROJECT VISION** (Expand dramatically)
-- Strategic business objectives and competitive positioning
-- Target audience psychographics and user journey mapping
-- Success metrics and KPI framework
-- Risk assessment and mitigation strategies
-- Innovation opportunities and cutting-edge features
+## 1. **PROFESSIONAL BRANDING & IDENTITY** (Website Hero Section)
+- Compelling professional introduction and value proposition
+- Personal brand positioning and unique selling points
+- Target client/audience identification and messaging
+- Professional photography and visual branding guidelines
+- Brand colors, typography, and visual identity system
+- Social proof and credibility establishment
 
-## 2. **COMPREHENSIVE REQUIREMENTS ANALYSIS** (Add 3-5x more detail)
-- Functional requirements with user stories and acceptance criteria
-- Non-functional requirements (performance, security, scalability)
-- Integration requirements and third-party services
-- Content management and workflow requirements
-- Advanced analytics and conversion optimization
+## 2. **WORK PORTFOLIO & CASE STUDIES** (Portfolio Section)
+- Detailed project showcases with before/after examples
+- Client success stories and impact metrics
+- Visual galleries with high-quality images and descriptions
+- Process documentation and methodology showcase
+- Skills demonstration through real work examples
+- Industry-specific portfolio organization and presentation
 
-## 3. **ADVANCED TECHNICAL ARCHITECTURE** (Professional-grade specifications)
-- Modern tech stack recommendations with justifications
-- Progressive Web App (PWA) capabilities
-- Headless CMS architecture and API strategy
-- Advanced caching and CDN implementation
-- Security framework and data protection protocols
-- Microservices and serverless architecture considerations
+## 3. **PROFESSIONAL EXPERIENCE & CREDENTIALS** (About & Experience Section)
+- Professional background and career journey
+- Skills and expertise presentation with proficiency levels
+- Education, certifications, and professional development
+- Awards, recognition, and industry achievements
+- Client testimonials and social proof integration
+- Professional philosophy and approach explanation
 
-## 4. **SOPHISTICATED DESIGN SYSTEM** (Professional design framework)
-- Comprehensive design system with atomic design principles
-- Advanced color theory and psychology-based palette
-- Typography hierarchy with accessibility considerations
-- Component library and design tokens
-- Animation and micro-interaction specifications
-- Dark/light mode implementation strategy
+## 4. **SERVICES & OFFERINGS** (Services Section)
+- Service descriptions with clear value propositions
+- Pricing packages and service tier presentation
+- Process explanation and client journey mapping
+- FAQ section addressing common client concerns
+- Call-to-action elements for lead generation
+- Booking and consultation scheduling integration
 
-## 5. **CONVERSION-OPTIMIZED CONTENT STRATEGY** (Marketing-focused approach)
-- Content marketing funnel and lead generation strategy
-- SEO-optimized content architecture and keyword mapping
-- Personalization and dynamic content recommendations
-- A/B testing framework for content optimization
-- Content governance and editorial workflows
-- Multilingual and localization strategy
+## 5. **CONTENT STRATEGY & ENGAGEMENT** (Blog & Content Section)
+- Content calendar and topic strategy
+- SEO-optimized blog content and resource creation
+- Lead magnets and downloadable resources
+- Newsletter signup and email marketing integration
+- Social media content strategy and sharing
+- Industry insights and thought leadership content
 
-## 6. **AGILE DEVELOPMENT ROADMAP** (Professional project management)
-- Detailed sprint planning with story points
-- CI/CD pipeline and deployment strategy
-- Code review and quality assurance protocols
-- Performance testing and optimization phases
-- User acceptance testing and feedback integration
-- Post-launch monitoring and iteration cycles
+## 6. **CLIENT EXPERIENCE & CONVERSION** (Contact & CTA Optimization)
+- Contact forms with lead qualification questions
+- Consultation booking and scheduling systems
+- Client onboarding process and expectations
+- Project inquiry and quote request systems
+- Trust signals and security assurances
+- Mobile optimization for on-the-go browsing
 
-## 7. **ADVANCED SEO & DIGITAL MARKETING** (Expert-level optimization)
-- Technical SEO audit and implementation plan
-- Advanced schema markup and structured data
-- Core Web Vitals optimization strategy
-- Voice search and AI optimization
-- Local SEO and Google My Business integration
-- Social media integration and sharing optimization
+## 7. **TECHNICAL IMPLEMENTATION & FEATURES** (Website Functionality)
+- Platform recommendations and hosting setup
+- Responsive design for all devices and browsers
+- Loading speed optimization and performance
+- SEO configuration and search visibility
+- Analytics tracking and conversion measurement
+- Security, backup, and maintenance protocols
 
-## 8. **ENTERPRISE-LEVEL ACCESSIBILITY** (WCAG 2.1 AAA compliance)
-- Comprehensive accessibility audit framework
-- Screen reader optimization and keyboard navigation
-- Color contrast and visual accessibility
-- Cognitive accessibility and content clarity
-- Assistive technology compatibility testing
-- Accessibility monitoring and maintenance protocols
+## 8. **MARKETING & BUSINESS GROWTH** (Digital Marketing Integration)
+- SEO strategy for local and industry searches
+- Social media integration and automation
+- Email marketing and lead nurturing setup
+- Portfolio submission to directories and platforms
+- Networking and referral system development
+- Client retention and repeat business strategies
 
-## 9. **PERFORMANCE & SCALABILITY** (Industry-leading optimization)
-- Core Web Vitals optimization (LCP, FID, CLS)
-- Advanced caching strategies and CDN implementation
-- Image optimization and next-gen formats
-- Code splitting and lazy loading implementation
-- Database optimization and query performance
-- Load testing and scalability planning
+PORTFOLIO WEBSITE ENHANCEMENT GUIDELINES:
+- Transform basic requirements into compelling website content
+- Create detailed section descriptions with actual copy and content
+- Provide specific design recommendations and visual guidelines
+- Include technical specifications for website development
+- Add conversion optimization features that generate leads
+- Provide SEO-optimized content for search visibility
+- Include accessibility features for inclusive design
+- Add professional presentation elements that impress clients
+- Create engaging storytelling elements that build trust
+- Provide specific implementation guidance for each website section
 
-## 10. **SECURITY & COMPLIANCE** (Enterprise-grade protection)
-- Advanced security headers and CSP implementation
-- GDPR/CCPA compliance framework
-- Data encryption and secure communication protocols
-- Regular security audits and vulnerability assessments
-- Backup and disaster recovery procedures
-- Privacy policy and legal compliance requirements
+WEBSITE CONTENT CREATION REQUIREMENTS:
+- Generate actual website copy and headlines for each section
+- Create compelling project descriptions with client impact
+- Write professional bio content that builds credibility
+- Develop call-to-action elements for lead generation
+- Include social proof elements and client testimonials
+- Create navigation structure and user experience flow
+- Provide image and multimedia recommendations
+- Include contact and connection opportunities
 
-## 11. **ANALYTICS & BUSINESS INTELLIGENCE** (Data-driven insights)
-- Advanced analytics implementation (GA4, mixpanel, etc.)
-- Custom event tracking and conversion funnels
-- Heatmap and user behavior analysis setup
-- A/B testing platform integration
-- Business intelligence dashboard creation
-- ROI tracking and performance reporting
+MANDATORY PORTFOLIO WEBSITE REQUIREMENTS:
+- **WEBSITE-READY CONTENT**: Provide actual copy, headlines, and descriptions for immediate use
+- **SECTION SPECIFICATIONS**: Detailed breakdown of each website section with content
+- **DESIGN GUIDELINES**: Visual design recommendations including colors, fonts, and layout
+- **TECHNICAL FEATURES**: Specific website functionality and interactive elements
+- **MULTIMEDIA INTEGRATION**: Photo, video, and document integration recommendations
+- **SEO OPTIMIZATION**: Industry-focused keywords and search optimization
+- **MOBILE RESPONSIVENESS**: Mobile-first design considerations
+- **ACCESSIBILITY COMPLIANCE**: Universal design and accessibility features
+- **CONVERSION OPTIMIZATION**: Lead generation and client acquisition optimization
+- **BUSINESS FOCUS**: Content specifically tailored for professional client acquisition
 
-## 12. **LAUNCH & GROWTH STRATEGY** (Post-launch success)
-- Soft launch and beta testing phases
-- Marketing campaign integration and timing
-- Social media and PR strategy coordination
-- Community building and engagement tactics
-- Conversion rate optimization roadmap
-- Long-term maintenance and feature development
+OUTPUT FORMAT - COMPREHENSIVE PORTFOLIO WEBSITE BRIEF:
+Create a detailed portfolio website specification with:
 
-ENHANCEMENT TRANSFORMATION GUIDELINES:
-- Transform basic inputs into professional, enterprise-level specifications
-- Add industry-leading best practices and cutting-edge technologies
-- Include detailed technical implementation guides
-- Provide specific tools, frameworks, and service recommendations
-- Add comprehensive testing and quality assurance protocols
-- Include advanced marketing and conversion optimization strategies
-- Expand simple requests into detailed, actionable implementation plans
-- Add professional project management and development methodologies
-- Include modern design principles and user experience best practices
-- Provide specific metrics, timelines, and success criteria
+### 🎯 **WEBSITE OVERVIEW & BRANDING** (300+ words)
+- Professional brand identity and visual direction
+- Target client analysis and market positioning
+- Unique value proposition and competitive advantages
+- Website goals and business success metrics
 
-CREATIVITY AND PROFESSIONAL INSIGHT REQUIREMENTS:
-- Add innovative features the user didn't think of but would benefit from
-- Suggest modern technologies and approaches that enhance the project
-- Include industry-specific optimizations and best practices
-- Recommend conversion optimization and user engagement strategies
-- Add comprehensive competitive analysis and positioning insights
-- Include scalability planning for future growth and expansion
+### 🏠 **HOMEPAGE & HERO SECTION** (400+ words)
+- Compelling headline and professional introduction
+- Value proposition and client benefit statements
+- Professional photo requirements and placement
+- Key achievements and credibility indicators
+- Clear navigation and user experience flow
+- Call-to-action elements for client acquisition
 
-MANDATORY ENHANCEMENT REQUIREMENTS - MAKE THE OUTPUT 5-10X LONGER:
-- **MINIMUM 5000-7000 WORDS**: The enhanced brief must be dramatically longer than the basic input
-- **COMPREHENSIVE TABLES**: Include detailed tables for timelines, budgets, technical specifications, and features
-- **SPECIFIC IMPLEMENTATION PLANS**: Every section must have step-by-step technical implementation guides
-- **INNOVATIVE FEATURES**: Add 15+ cutting-edge features and technologies the client didn't consider
-- **DETAILED SPECIFICATIONS**: Include complete technical specifications, wireframes, and architecture diagrams (described in detail)
-- **BUDGET BREAKDOWNS**: Include detailed cost estimates for development, tools, hosting, and maintenance
-- **RISK MITIGATION**: Identify technical challenges and provide specific solutions
-- **PERFORMANCE METRICS**: Define specific KPIs, conversion goals, and success measurements
-- **COMPETITIVE ANALYSIS**: Detailed analysis of industry leaders and best practices
-- **SCALABILITY PLANNING**: Future growth and expansion strategies
+### 👨‍💼 **ABOUT & PROFESSIONAL STORY SECTION** (500+ words)
+- Professional background and career journey
+- Expertise and specialization areas
+- Personal story that builds connection and trust
+- Professional philosophy and approach
+- Personality insights that differentiate from competitors
+- Client-focused messaging and value delivery
 
-OUTPUT FORMAT - ENTERPRISE-LEVEL PROJECT BRIEF:
-Create a detailed, enterprise-level project brief of 6000-8000+ words with:
+### 💼 **PORTFOLIO & WORK SHOWCASE SECTION** (700+ words)
+- Detailed project case studies with client outcomes
+- Visual presentation guidelines for work samples
+- Before/after examples and transformation stories
+- Process documentation and methodology showcase
+- Client testimonials and success metrics
+- Skills demonstration through real examples
 
-### 🎯 **EXECUTIVE SUMMARY & PROJECT VISION** (600+ words)
-- Strategic business objectives and market positioning
-- Competitive landscape analysis and differentiation strategy
-- Success metrics and ROI projections
-- Risk assessment and mitigation overview
-- Innovation opportunities and cutting-edge features
+### 🛠️ **SERVICES & OFFERINGS SECTION** (500+ words)
+- Service descriptions with clear value propositions
+- Pricing strategy and package presentation
+- Process explanation and client journey
+- FAQ addressing common client concerns
+- Call-to-action elements and booking systems
+- Consultation and quote request optimization
 
-### 📊 **COMPREHENSIVE REQUIREMENTS ANALYSIS** (1000+ words)
-- Detailed functional requirements with user stories
-- Non-functional requirements (performance, security, scalability)
-- Integration requirements and third-party services
-- Content management and workflow specifications
-- Advanced analytics and conversion optimization requirements
+### 📱 **TECHNICAL SPECIFICATIONS & IMPLEMENTATION** (400+ words)
+- Website platform and technology recommendations
+- Responsive design and mobile optimization
+- SEO strategy for industry and local searches
+- Analytics and conversion tracking setup
+- Security and privacy considerations
+- Performance optimization and loading speed
 
-### 🏗️ **ADVANCED TECHNICAL ARCHITECTURE** (1200+ words)
-- Modern tech stack recommendations with detailed justifications
-- Progressive Web App (PWA) specifications
-- Headless CMS architecture and API strategy
-- Advanced caching and CDN implementation plans
-- Security framework and data protection protocols
-- Microservices and serverless architecture considerations
-- Database design and optimization strategies
+### 🎨 **DESIGN & USER EXPERIENCE GUIDELINES** (300+ words)
+- Visual design recommendations and brand consistency
+- Typography and readability optimization
+- Navigation structure and user flow
+- Interactive elements and engagement features
+- Accessibility compliance and universal design
+- Mobile and tablet optimization
 
-### 🎨 **SOPHISTICATED DESIGN SYSTEM & UX STRATEGY** (1000+ words)
-- Comprehensive design system with atomic design principles
-- Advanced color theory and psychology-based palette specifications
-- Typography hierarchy with accessibility considerations
-- Component library and design token documentation
-- Animation and micro-interaction specifications
-- Responsive design and mobile-first strategy
-- Dark/light mode implementation plans
-
-### 📝 **CONVERSION-OPTIMIZED CONTENT STRATEGY** (800+ words)
-- Content marketing funnel and lead generation strategy
-- SEO-optimized content architecture and keyword mapping
-- Personalization and dynamic content recommendations
-- A/B testing framework for content optimization
-- Content governance and editorial workflow specifications
-- Multilingual and localization implementation plans
-
-### 🚀 **AGILE DEVELOPMENT ROADMAP & PROJECT MANAGEMENT** (800+ words)
-- Detailed sprint planning with story points and velocity estimates
-- CI/CD pipeline and deployment strategy specifications
-- Code review and quality assurance protocols
-- Performance testing and optimization phases
-- User acceptance testing and feedback integration processes
-- Post-launch monitoring and iteration cycles
-
-### 📈 **ADVANCED SEO & DIGITAL MARKETING STRATEGY** (700+ words)
-- Technical SEO audit and implementation checklist
-- Advanced schema markup and structured data specifications
-- Core Web Vitals optimization strategy and implementation
-- Voice search and AI optimization tactics
-- Local SEO and Google My Business integration
-- Social media integration and sharing optimization protocols
-
-### ♿ **ENTERPRISE-LEVEL ACCESSIBILITY & COMPLIANCE** (500+ words)
-- WCAG 2.1 AAA compliance implementation roadmap
-- Screen reader optimization and keyboard navigation specifications
-- Color contrast and visual accessibility requirements
-- Cognitive accessibility and content clarity guidelines
-- Assistive technology compatibility testing protocols
-- Accessibility monitoring and maintenance procedures
-
-### ⚡ **PERFORMANCE OPTIMIZATION & SCALABILITY** (600+ words)
-- Core Web Vitals optimization implementation (LCP, FID, CLS)
-- Advanced caching strategies and CDN configuration
-- Image optimization and next-gen format implementation
-- Code splitting and lazy loading specifications
-- Database optimization and query performance tuning
-- Load testing and scalability planning protocols
-
-### 🔒 **SECURITY & COMPLIANCE FRAMEWORK** (500+ words)
-- Advanced security headers and CSP implementation
-- GDPR/CCPA compliance framework and procedures
-- Data encryption and secure communication protocols
-- Regular security audit and vulnerability assessment schedules
-- Backup and disaster recovery implementation plans
-- Privacy policy and legal compliance requirements
-
-### 📊 **ANALYTICS & BUSINESS INTELLIGENCE** (400+ words)
-- Advanced analytics implementation (GA4, Mixpanel, etc.)
-- Custom event tracking and conversion funnel setup
-- Heatmap and user behavior analysis configuration
-- A/B testing platform integration specifications
-- Business intelligence dashboard requirements
-- ROI tracking and performance reporting protocols
-
-### 🎉 **LAUNCH STRATEGY & GROWTH PLANNING** (400+ words)
-- Soft launch and beta testing phase specifications
-- Marketing campaign integration and timing coordination
-- Social media and PR strategy synchronization
-- Community building and engagement tactical plans
-- Conversion rate optimization roadmap
-- Long-term maintenance and feature development strategies
+### 📈 **MARKETING & BUSINESS GROWTH STRATEGY** (300+ words)
+- Content marketing and blog strategy
+- Social media integration and automation
+- Email marketing and lead nurturing
+- SEO and search visibility optimization
+- Client referral and retention strategies
+- Portfolio promotion and networking
 
 **FORMATTING REQUIREMENTS:**
-- Use comprehensive markdown formatting with clear hierarchy and professional structure
-- Include detailed tables for timelines, budgets, technical specifications, and feature comparisons
-- Add specific implementation steps with deadlines, responsible parties, and deliverables
-- Include professional templates, code examples, and configuration samples throughout
-- Use bullet points, numbered lists, charts (described), and clear sectioning
-- Add estimated costs, development timeframes, and resource allocation requirements
-- Include specific tools, frameworks, platforms, and service recommendations with versions and specifications
-- Provide detailed wireframes and architecture descriptions
-- Include comprehensive testing checklists and quality assurance protocols
+- Provide actual website copy and content for immediate use
+- Include specific design recommendations with examples
+- Add technical implementation guidance and platform suggestions
+- Use clear headings and organized structure for easy development
+- Include SEO keywords and industry-focused optimization
+- Provide multimedia integration recommendations
+- Add accessibility and mobile optimization guidelines
+- Include conversion optimization and lead generation elements
 
-Make this brief so comprehensive and valuable that it could serve as the foundation for a $75,000-$150,000+ professional portfolio development project. The enhanced version should be dramatically more detailed, actionable, and enterprise-grade than the basic input provided.
+Make this portfolio website brief comprehensive enough to build a professional, client-attracting portfolio website that showcases work effectively and drives business growth.
 `
 
     } else {
@@ -743,16 +659,16 @@ Make this brief so comprehensive and valuable that it could serve as the foundat
         {
           role: "system",
           content: isUniversityMode(formData) 
-            ? `You are an ELITE COLLEGE ADMISSIONS STRATEGIST with 25+ years of experience at Harvard, MIT, Stanford, and Princeton admissions offices. You've personally helped over 2,000 students gain admission to top-tier universities. Your enhanced briefs are 5-10x longer and more detailed than the original input, with comprehensive strategies, specific timelines, detailed action plans, professional tables, and innovative approaches that set students apart. Every response must be a comprehensive 4000-6000+ word strategy document with detailed subsections, specific deadlines, tactical implementation guides, and professional formatting.`
-            : `You are a SENIOR WEB DEVELOPMENT CONSULTANT and DIGITAL STRATEGY EXPERT who has built $100M+ in web projects for Fortune 500 companies, top design agencies, and unicorn startups. You transform basic requirements into comprehensive 5000-7000+ word enterprise-level project briefs worth $50,000-$100,000+ in value. Every enhanced brief includes detailed technical specifications, comprehensive timelines, professional tables, innovative features the client didn't consider, complete testing protocols, advanced optimization strategies, and enterprise-grade implementation plans with specific tools, frameworks, and methodologies.`
+            ? `You are an EXPERT PORTFOLIO WEBSITE DEVELOPER specializing in university application portfolios. You create comprehensive, website-ready content that showcases student achievements effectively for admissions committees. Your enhanced briefs provide all the content, structure, and specifications needed to build impressive university application portfolio websites. Every response is focused on actionable website content rather than strategic planning.`
+            : `You are an EXPERT PORTFOLIO WEBSITE DEVELOPER specializing in professional portfolios. You create comprehensive, website-ready content that showcases work effectively and attracts clients. Your enhanced briefs provide all the content, structure, and specifications needed to build impressive professional portfolio websites. Every response is focused on actionable website content rather than technical consulting.`
         },
         {
           role: "user",
           content: enhancementPrompt
         }
       ],
-      max_tokens: 16000,
-      temperature: 0.5,
+      max_tokens: 8000,
+      temperature: 0.4,
     })
 
     const enhancedPrompt = completion.choices[0].message.content

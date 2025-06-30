@@ -460,39 +460,43 @@ export function PromptGallery() {
         <Dialog open={modalOpen} onOpenChange={setModalOpen}>
           <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
             <DialogHeader>
-              <DialogTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <span className="truncate">{selectedPrompt?.title}</span>
-                <div className="flex items-center gap-2 self-start sm:self-auto">
-                  {selectedPrompt?.enhanced_prompt && (
-                    <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-                      <Button
-                        size="sm"
-                        variant={viewType === 'original' ? 'default' : 'ghost'}
-                        onClick={() => setViewType('original')}
-                      >
-                        Original
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant={viewType === 'enhanced' ? 'default' : 'ghost'}
-                        onClick={() => setViewType('enhanced')}
-                      >
-                        Enhanced
-                      </Button>
-                    </div>
-                  )}
-                  <Button
-                    size="sm"
-                    onClick={() => copyToClipboard(
-                      viewType === 'enhanced' && selectedPrompt?.enhanced_prompt 
-                        ? selectedPrompt.enhanced_prompt 
-                        : selectedPrompt?.original_prompt || ''
+              <DialogTitle className="flex flex-col gap-3">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+                  <h2 className="text-lg font-semibold leading-tight break-words min-w-0 flex-1 max-w-full sm:max-w-[60%]">
+                    {selectedPrompt?.title}
+                  </h2>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {selectedPrompt?.enhanced_prompt && (
+                      <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+                        <Button
+                          size="sm"
+                          variant={viewType === 'original' ? 'default' : 'ghost'}
+                          onClick={() => setViewType('original')}
+                        >
+                          Original
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant={viewType === 'enhanced' ? 'default' : 'ghost'}
+                          onClick={() => setViewType('enhanced')}
+                        >
+                          Enhanced
+                        </Button>
+                      </div>
                     )}
-                    className="gap-2"
-                  >
-                    {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    {copied ? 'Copied!' : 'Copy'}
-                  </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => copyToClipboard(
+                        viewType === 'enhanced' && selectedPrompt?.enhanced_prompt 
+                          ? selectedPrompt.enhanced_prompt 
+                          : selectedPrompt?.original_prompt || ''
+                      )}
+                      className="gap-2"
+                    >
+                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                      {copied ? 'Copied!' : 'Copy'}
+                    </Button>
+                  </div>
                 </div>
               </DialogTitle>
             </DialogHeader>
