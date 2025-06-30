@@ -357,12 +357,57 @@ Create a detailed portfolio website specification with:
 - Include specific design recommendations with examples
 - Add technical implementation guidance and platform suggestions
 - Use clear headings and organized structure for easy development
-- Include SEO keywords and industry-focused optimization
+- Include SEO keywords and university-focused optimization
 - Provide multimedia integration recommendations
 - Add accessibility and mobile optimization guidelines
-- Include conversion optimization and lead generation elements
 
-Make this portfolio website brief comprehensive enough to build a professional, client-attracting portfolio website that showcases work effectively and drives business growth.
+**V0 DEV COMPATIBILITY REQUIREMENTS:**
+- Use specific component descriptions (Hero, Card, Button, Navigation, etc.)
+- Include exact color codes and typography specifications
+- Provide responsive design breakpoints and layout instructions
+- Add interactive element descriptions (forms, modals, animations)
+- Include specific React/Next.js component suggestions
+- Provide Tailwind CSS class recommendations
+- Add modern UI patterns and component libraries (shadcn/ui)
+
+**OUTPUT FORMAT - V0-READY PORTFOLIO WEBSITE PROMPT:**
+Create a comprehensive v0-compatible website prompt with:
+
+### 🎯 **V0 WEBSITE SPECIFICATION** (200+ words)
+- Complete website description optimized for v0 dev
+- Specific component layout and structure
+- Modern design system with exact specifications
+- Responsive behavior and interaction patterns
+
+### 🎨 **DESIGN SYSTEM & COMPONENTS** (300+ words)
+- Color palette with exact hex codes
+- Typography system with font families and sizes
+- Component specifications (buttons, cards, forms, navigation)
+- Layout grid and spacing system
+- Interactive elements and hover states
+
+### 📱 **RESPONSIVE LAYOUT SPECIFICATION** (200+ words)
+- Mobile-first responsive breakpoints
+- Component behavior across screen sizes
+- Navigation patterns and mobile menu
+- Touch-friendly interactive elements
+- Performance optimization requirements
+
+### 🛠️ **TECHNICAL IMPLEMENTATION** (200+ words)
+- React/Next.js component suggestions
+- Tailwind CSS utility classes
+- Modern UI library integration (shadcn/ui, Radix)
+- Animation and transition specifications
+- Form handling and validation
+
+### 📝 **CONTENT & COPY** (400+ words)
+- Ready-to-use website content for all sections
+- Compelling headlines and descriptions
+- Call-to-action text and button labels
+- Navigation menu items and structure
+- SEO-optimized page titles and meta descriptions
+
+Make this portfolio website prompt comprehensive and v0-dev ready so it can generate a complete, modern, responsive portfolio website with all necessary components and content.
 `
 
     } else if (isGeneralMode(formData)) {
@@ -613,12 +658,57 @@ Create a detailed portfolio website specification with:
 - Include specific design recommendations with examples
 - Add technical implementation guidance and platform suggestions
 - Use clear headings and organized structure for easy development
-- Include SEO keywords and industry-focused optimization
+- Include SEO keywords and university-focused optimization
 - Provide multimedia integration recommendations
 - Add accessibility and mobile optimization guidelines
-- Include conversion optimization and lead generation elements
 
-Make this portfolio website brief comprehensive enough to build a professional, client-attracting portfolio website that showcases work effectively and drives business growth.
+**V0 DEV COMPATIBILITY REQUIREMENTS:**
+- Use specific component descriptions (Hero, Card, Button, Navigation, etc.)
+- Include exact color codes and typography specifications
+- Provide responsive design breakpoints and layout instructions
+- Add interactive element descriptions (forms, modals, animations)
+- Include specific React/Next.js component suggestions
+- Provide Tailwind CSS class recommendations
+- Add modern UI patterns and component libraries (shadcn/ui)
+
+**OUTPUT FORMAT - V0-READY PORTFOLIO WEBSITE PROMPT:**
+Create a comprehensive v0-compatible website prompt with:
+
+### 🎯 **V0 WEBSITE SPECIFICATION** (200+ words)
+- Complete website description optimized for v0 dev
+- Specific component layout and structure
+- Modern design system with exact specifications
+- Responsive behavior and interaction patterns
+
+### 🎨 **DESIGN SYSTEM & COMPONENTS** (300+ words)
+- Color palette with exact hex codes
+- Typography system with font families and sizes
+- Component specifications (buttons, cards, forms, navigation)
+- Layout grid and spacing system
+- Interactive elements and hover states
+
+### 📱 **RESPONSIVE LAYOUT SPECIFICATION** (200+ words)
+- Mobile-first responsive breakpoints
+- Component behavior across screen sizes
+- Navigation patterns and mobile menu
+- Touch-friendly interactive elements
+- Performance optimization requirements
+
+### 🛠️ **TECHNICAL IMPLEMENTATION** (200+ words)
+- React/Next.js component suggestions
+- Tailwind CSS utility classes
+- Modern UI library integration (shadcn/ui, Radix)
+- Animation and transition specifications
+- Form handling and validation
+
+### 📝 **CONTENT & COPY** (400+ words)
+- Ready-to-use website content for all sections
+- Compelling headlines and descriptions
+- Call-to-action text and button labels
+- Navigation menu items and structure
+- SEO-optimized page titles and meta descriptions
+
+Make this portfolio website prompt comprehensive and v0-dev ready so it can generate a complete, modern, responsive portfolio website with all necessary components and content.
 `
 
     } else {
