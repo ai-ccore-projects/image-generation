@@ -239,7 +239,7 @@ export function PortfolioGallery({
     setEditForm({
       title: portfolio.title,
       description: portfolio.description,
-      website_url: portfolio.website_url,
+      website_url: portfolio.website_url || '', // Convert null to empty string
       is_public: portfolio.is_public
     })
     setEditModalOpen(true)
@@ -429,8 +429,9 @@ export function PortfolioGallery({
                 className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
                 onClick={(e) => {
                   e.stopPropagation()
-                  window.open(portfolio.website_url, '_blank')
+                  portfolio.website_url && window.open(portfolio.website_url, '_blank')
                 }}
+                disabled={!portfolio.website_url}
               >
                 <ExternalLink className="h-4 w-4" />
               </Button>
