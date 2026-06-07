@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Replicate from "replicate"
+import { runWithRetry } from "@/lib/replicate-run"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
       iconic_location: params.iconic_location
     }
 
-    const output = await replicate.run("flux-kontext-apps/iconic-locations", { input })
+    const output = await runWithRetry(replicate, "flux-kontext-apps/iconic-locations", { input })
 
     if (!output) {
       throw new Error("No output returned from Iconic Locations")

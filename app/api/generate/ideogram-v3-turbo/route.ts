@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Replicate from "replicate"
+import { runWithRetry } from "@/lib/replicate-run"
 import { extractImageUrl } from "@/lib/replicate-output"
 
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
@@ -8,7 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const { prompt } = await request.json()
 
-    const output = await replicate.run("ideogram-ai/ideogram-v3-turbo", {
+    const output = await runWithRetry(replicate, "ideogram-ai/ideogram-v3-turbo", {
       input: { prompt, aspect_ratio: "1:1" },
     })
 

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Replicate from "replicate"
+import { runWithRetry } from "@/lib/replicate-run"
 import { extractImageUrl } from "@/lib/replicate-output"
 
 const replicate = new Replicate({ auth: process.env.REPLICATE_API_TOKEN })
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
       input.image_input = [params.input_image]
     }
 
-    const output = await replicate.run("google/nano-banana", { input })
+    const output = await runWithRetry(replicate, "google/nano-banana", { input })
 
     const url = await extractImageUrl(output, "image/png")
     return NextResponse.json({ url, revised_prompt: prompt })

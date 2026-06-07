@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Replicate from "replicate"
+import { runWithRetry } from "@/lib/replicate-run"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
       input_image_2: params.input_image_2
     }
 
-    const output = await replicate.run("flux-kontext-apps/multi-image-kontext-pro", { input })
+    const output = await runWithRetry(replicate, "flux-kontext-apps/multi-image-kontext-pro", { input })
 
     if (!output) {
       throw new Error("No output returned from Multi-Image Kontext Pro")

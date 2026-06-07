@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Replicate from "replicate"
+import { runWithRetry } from "@/lib/replicate-run"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const output = await replicate.run("black-forest-labs/flux-schnell", {
+    const output = await runWithRetry(replicate, "black-forest-labs/flux-schnell", {
       input: {
         prompt: enhancedPrompt,
       },

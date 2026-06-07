@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 import Replicate from "replicate"
+import { runWithRetry } from "@/lib/replicate-run"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
       control_image: params.control_image
     }
 
-    const output = await replicate.run("black-forest-labs/flux-depth-pro", { input })
+    const output = await runWithRetry(replicate, "black-forest-labs/flux-depth-pro", { input })
 
     if (!output) {
       throw new Error("No output returned from FLUX Depth Pro")
