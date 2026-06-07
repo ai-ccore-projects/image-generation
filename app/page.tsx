@@ -38,7 +38,7 @@ export default function HomePage() {
               NextGen AI Studio
             </h2>
             <p className="text-xl font-semibold text-purple-700 dark:text-purple-300">
-              June 23 - August 1, 2025
+              June 01 - July 10, 2026
             </p>
           </div>
           

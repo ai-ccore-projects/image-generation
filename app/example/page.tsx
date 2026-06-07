@@ -13,7 +13,7 @@ export default function ExamplePage() {
     setLoading(true)
     const supabase = getSupabaseClient()
     try {
-      const { data, error } = await supabase.from("test_table").select("*").limit(5)
+      const { data, error } = await supabase.from("challenge_reference_images").select("*").limit(5)
 
       if (error) {
         console.error("Error:", error)

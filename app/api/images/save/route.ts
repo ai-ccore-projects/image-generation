@@ -1,8 +1,9 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
+import { publicStorageUrl } from "@/lib/supabase/server"
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_INTERNAL_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
@@ -51,10 +52,8 @@ export async function POST(request: NextRequest) {
       throw new Error(`Failed to upload image: ${uploadError.message}`)
     }
 
-    // Get public URL
-    const { data: { publicUrl } } = supabase.storage
-      .from('generated-images')
-      .getPublicUrl(filename)
+    // Get public URL (built from the PUBLIC base so browsers can load it)
+    const publicUrl = publicStorageUrl('generated-images', filename)
 
     // Save metadata to database
     const { data: dbData, error: dbError } = await supabase

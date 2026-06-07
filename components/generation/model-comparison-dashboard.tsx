@@ -117,9 +117,9 @@ export function ModelComparisonDashboard() {
   const [generatingSuperhero, setGeneratingSuperhero] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [results, setResults] = useState<Record<string, any>>({})
-  const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set(["gpt-4o", "dall-e-3"])) // Default to 2 popular models
+  const [selectedModels, setSelectedModels] = useState<Set<string>>(new Set(["flux-schnell", "recraft-v3"])) // Default to one low-cost + one ok-cost model
   const [temperatureMode, setTemperatureMode] = useState(false)
-  const [selectedModelForTemp, setSelectedModelForTemp] = useState("dall-e-3")
+  const [selectedModelForTemp, setSelectedModelForTemp] = useState("flux-schnell")
   const [customTemperatures, setCustomTemperatures] = useState([0.3, 0.7, 1.0, 1.3])
   const [globalTemperature, setGlobalTemperature] = useState([1.0])
   const [usePresets, setUsePresets] = useState(true)
@@ -157,14 +157,15 @@ export function ModelComparisonDashboard() {
     if (savedPrompt) setPrompt(savedPrompt)
     if (savedSelectedModels) {
       try {
-        const models = JSON.parse(savedSelectedModels)
-        setSelectedModels(new Set(models))
+        const validKeys = Object.keys(MODEL_CONFIGS)
+        const models = (JSON.parse(savedSelectedModels) as string[]).filter((m) => validKeys.includes(m))
+        if (models.length) setSelectedModels(new Set(models))
       } catch (e) {
         // Ignore parsing errors
       }
     }
     if (savedTemperatureMode) setTemperatureMode(savedTemperatureMode === 'true')
-    if (savedSelectedModelForTemp) setSelectedModelForTemp(savedSelectedModelForTemp)
+    if (savedSelectedModelForTemp && savedSelectedModelForTemp in MODEL_CONFIGS) setSelectedModelForTemp(savedSelectedModelForTemp)
   }, [])
 
   // Save prompt to localStorage when it changes

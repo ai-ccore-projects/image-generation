@@ -31,7 +31,7 @@ export function ChallengesDashboard() {
         <div className="relative container mx-auto px-4 py-16 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-sm font-medium text-blue-700 dark:text-blue-300 mb-6">
             <Sparkles className="h-4 w-4" />
-             Image Generation Excercises
+             Image Generation Exercises
           </div>
           
           <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">
@@ -57,14 +57,14 @@ export function ChallengesDashboard() {
               className="text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-purple-500 data-[state=active]:text-white transition-all duration-300"
             >
               <Image className="h-4 w-4 mr-2" />
-              Exercise 2
+              Exercise 1
             </TabsTrigger>
             <TabsTrigger 
               value="linkedin-profile" 
               className="text-sm font-medium data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-pink-500 data-[state=active]:text-white transition-all duration-300"
             >
               <Briefcase className="h-4 w-4 mr-2" />
-              Exercise 3
+              Exercise 2
             </TabsTrigger>
           </TabsList>
 

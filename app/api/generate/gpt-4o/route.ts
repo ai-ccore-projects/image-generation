@@ -7,46 +7,47 @@ const openai = new OpenAI({
 
 export async function POST(request: NextRequest) {
   try {
-    const { prompt, params } = await request.json()
+    const { prompt } = await request.json()
 
-    // GPT-4o doesn't have native image generation, so we'll use DALL-E 3 as a fallback
-    // but enhance the prompt using GPT-4o first
-    const enhancedPromptResponse = await openai.chat.completions.create({
-      model: "gpt-4o",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an expert at creating detailed, artistic image prompts. Enhance the user's prompt to be more descriptive and visually compelling while maintaining their original intent.",
-        },
-        {
-          role: "user",
-          content: `Enhance this image prompt: ${prompt}`,
-        },
-      ],
-      max_tokens: 200,
-    })
+    if (!prompt || typeof prompt !== "string" || !prompt.trim()) {
+      return NextResponse.json({ error: "Valid prompt is required" }, { status: 400 })
+    }
 
-    const enhancedPrompt =  prompt
+    // GPT-4o has no native image output: enhance the prompt with GPT-4o (best
+    // effort), then render it with the gpt-image-1 image model.
+    let enhancedPrompt = prompt
+    try {
+      const enhanced = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an expert at creating detailed, artistic image prompts. Enhance the user's prompt to be more descriptive and visually compelling while maintaining their original intent. Respond with only the enhanced prompt, no preamble.",
+          },
+          { role: "user", content: `Enhance this image prompt: ${prompt}` },
+        ],
+        max_tokens: 300,
+      })
+      enhancedPrompt = enhanced.choices[0]?.message?.content?.trim() || prompt
+    } catch (e) {
+      console.warn("GPT-4o prompt enhancement failed; using original prompt:", e)
+    }
 
-    // Generate image using DALL-E 3 with enhanced prompt
-    const imageResponse = await openai.images.generate({
-      model: "dall-e-3",
+    const result = await openai.images.generate({
+      model: "gpt-image-1",
       prompt: enhancedPrompt,
       n: 1,
       size: "1024x1024",
-      quality: params.quality || "standard",
-      style: params.style || "vivid",
     })
 
-    const imageUrl = imageResponse.data?.[0]?.url
-
-    if (!imageUrl) {
-      throw new Error("No image URL returned from OpenAI")
+    const b64 = result.data?.[0]?.b64_json
+    if (!b64) {
+      throw new Error("No image returned from gpt-image-1")
     }
 
     return NextResponse.json({
-      url: imageUrl,
+      url: `data:image/png;base64,${b64}`,
       revised_prompt: enhancedPrompt,
     })
   } catch (error: any) {

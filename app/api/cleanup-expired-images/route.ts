@@ -1,6 +1,11 @@
 import { supabaseAdmin } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
+// Runtime-only route: never try to statically prerender/export it (the GET
+// handler returns a static object, which otherwise makes Next attempt a
+// prerender that fails under basePath). This keeps it a normal API endpoint.
+export const dynamic = "force-dynamic"
+
 export async function POST(request: NextRequest) {
   try {
     // Get the authorization header

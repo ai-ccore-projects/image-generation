@@ -1,181 +1,79 @@
 import type { GenerationParams } from "./types"
 
-// Real OpenAI API integration
-export async function generateWithGPT4o(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/gpt-4o", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
+// Every model is served by its own route at /api/generate/<key>, which calls the
+// corresponding Replicate model server-side. This factory builds the client-side
+// caller and surfaces the server's error message when something goes wrong.
+function makeGenerator(endpoint: string, label: string) {
+  return async (prompt: string, params: GenerationParams) => {
+    const response = await fetch(`/api/generate/${endpoint}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, params }),
+    })
 
-  if (!response.ok) {
-    throw new Error("Failed to generate image with GPT-4o")
+    if (!response.ok) {
+      let detail = ""
+      try {
+        detail = (await response.json())?.error || ""
+      } catch {
+        /* non-JSON error body */
+      }
+      throw new Error(detail || `Failed to generate image with ${label}`)
+    }
+
+    return await response.json()
   }
-
-  return await response.json()
 }
 
-export async function generateWithGPTImage1(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/gpt-image-1", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate image with GPT-Image-1")
-  }
-
-  return await response.json()
-}
-
-export async function generateWithMiniMaxImage01(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/minimax-image-01", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate image with MiniMax Image-01")
-  }
-
-  return await response.json()
-}
-
-export async function generateWithDALLE3(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/dall-e-3", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate image with DALL-E 3")
-  }
-
-  return await response.json()
-}
-
-export async function generateWithFluxSchnell(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/flux-schnell", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate image with FLUX SCHNELL")
-  }
-
-  return await response.json()
-}
-
-export async function generateWithLatentConsistency(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/latent-consistency", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate image with Latent Consistency")
-  }
-
-  return await response.json()
-}
-
-export async function generateWithRecraftV3(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/recraft-v3", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate image with Recraft V3")
-  }
-
-  return await response.json()
-}
-
-export async function generateWithImagen4(prompt: string, params: GenerationParams) {
-  const response = await fetch("/api/generate/imagen-4", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ prompt, params }),
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to generate image with Imagen-4")
-  }
-
-  return await response.json()
-}
-
+// Curated lineup of the latest low → ok cost Replicate image models.
+// Prices are approximate per 1024px image (see Replicate pricing).
 export const MODEL_CONFIGS = {
-  "gpt-4o": {
-    name: "GPT-4o",
-    description: "Latest GPT-4 with vision capabilities",
-    generator: generateWithGPT4o,
-    color: "bg-blue-500",
-  },
-  "gpt-image-1": {
-    name: "GPT-Image-1",
-    description: "Specialized image generation model",
-    generator: generateWithGPTImage1,
-    color: "bg-purple-500",
-  },
-  "minimax-image-01": {
-    name: "MiniMax Image-01",
-    description: "Advanced image generation with aspect ratio control and prompt optimization",
-    generator: generateWithMiniMaxImage01,
-    color: "bg-emerald-500",
-  },
-  "dall-e-3": {
-    name: "DALL-E 3",
-    description: "Most advanced DALL-E model",
-    generator: generateWithDALLE3,
-    color: "bg-orange-500",
-  },
   "flux-schnell": {
-    name: "FLUX SCHNELL",
-    description: "Fast and high-quality image generation by Black Forest Labs",
-    generator: generateWithFluxSchnell,
+    name: "FLUX Schnell",
+    description: "Low · ~$0.003 — Fast, high-quality generation by Black Forest Labs",
+    generator: makeGenerator("flux-schnell", "FLUX Schnell"),
     color: "bg-pink-500",
   },
-  "latent-consistency": {
-    name: "Latent Consistency",
-    description: "Ultra-fast image-to-image transformation with 4 inference steps",
-    generator: generateWithLatentConsistency,
-    color: "bg-teal-500",
+  "sdxl-lightning": {
+    name: "SDXL Lightning",
+    description: "Low · ~$0.002 — Ultra-fast 4-step SDXL (ByteDance)",
+    generator: makeGenerator("sdxl-lightning", "SDXL Lightning"),
+    color: "bg-amber-500",
+  },
+  "nano-banana": {
+    name: "Nano Banana",
+    description: "Mid · ~$0.02 — Google Gemini Flash image model, strong prompt fidelity",
+    generator: makeGenerator("nano-banana", "Nano Banana"),
+    color: "bg-yellow-500",
+  },
+  "imagen-4-fast": {
+    name: "Imagen-4 Fast",
+    description: "Mid · ~$0.02 — Google Imagen 4, optimized for quick iteration",
+    generator: makeGenerator("imagen-4-fast", "Imagen-4 Fast"),
+    color: "bg-red-500",
+  },
+  "qwen-image": {
+    name: "Qwen-Image",
+    description: "Mid · ~$0.021 — Excellent text rendering and detail (Alibaba Qwen)",
+    generator: makeGenerator("qwen-image", "Qwen-Image"),
+    color: "bg-cyan-500",
+  },
+  "ideogram-v3-turbo": {
+    name: "Ideogram v3 Turbo",
+    description: "Ok · ~$0.03 — Precise text & design with style references",
+    generator: makeGenerator("ideogram-v3-turbo", "Ideogram v3 Turbo"),
+    color: "bg-fuchsia-500",
+  },
+  "flux-2-pro": {
+    name: "FLUX.2 Pro",
+    description: "Ok · ~$0.031 — Latest FLUX.2, high fidelity (Black Forest Labs)",
+    generator: makeGenerator("flux-2-pro", "FLUX.2 Pro"),
+    color: "bg-violet-500",
   },
   "recraft-v3": {
     name: "Recraft V3",
-    description: "Professional image generation with flexible sizing and high-quality output",
-    generator: generateWithRecraftV3,
+    description: "Ok · ~$0.04 — Design-first, flexible sizing, crisp output",
+    generator: makeGenerator("recraft-v3", "Recraft V3"),
     color: "bg-indigo-500",
-  },
-  "imagen-4": {
-    name: "Imagen-4",
-    description: "Google's latest text-to-image model with advanced understanding",
-    generator: generateWithImagen4,
-    color: "bg-red-500",
   },
 }

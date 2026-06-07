@@ -124,8 +124,8 @@ export function PortfolioGallery({
     if (searchTerm) {
       filtered = filtered.filter(portfolio => 
         portfolio.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        portfolio.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        portfolio.website_url.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        portfolio.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        portfolio.website_url?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (portfolio.tags && portfolio.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())))
       )
     }

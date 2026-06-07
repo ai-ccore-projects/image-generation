@@ -33,9 +33,7 @@ export async function POST(request: NextRequest) {
       // Convert binary data to base64
       const buffer = output instanceof Uint8Array ? output : new Uint8Array(await new Response(output).arrayBuffer())
       const base64 = Buffer.from(buffer).toString('base64')
-      imageUrl = {
-        url: `data:image/jpeg;base64,${base64}`
-      }
+      imageUrl = `data:image/jpeg;base64,${base64}`
     }
 
     return NextResponse.json({

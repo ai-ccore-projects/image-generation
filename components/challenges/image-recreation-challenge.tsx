@@ -55,7 +55,7 @@ export function ImageRecreationChallenge() {
   const [referenceImages, setReferenceImages] = useState<ReferenceImage[]>([])
   const [selectedImage, setSelectedImage] = useState<ReferenceImage | null>(null)
   const [userPrompt, setUserPrompt] = useState("")
-  const [selectedModel, setSelectedModel] = useState("dall-e-3")
+  const [selectedModel, setSelectedModel] = useState("flux-schnell")
   const [isGenerating, setIsGenerating] = useState(false)
   const [isComparing, setIsComparing] = useState(false)
   const [generatedImageUrl, setGeneratedImageUrl] = useState("")
@@ -121,7 +121,7 @@ export function ImageRecreationChallenge() {
       }
     }
     if (savedUserPrompt) setUserPrompt(savedUserPrompt)
-    if (savedSelectedModel) setSelectedModel(savedSelectedModel)
+    if (savedSelectedModel && savedSelectedModel in MODEL_CONFIGS) setSelectedModel(savedSelectedModel)
     if (savedGeneratedImageUrl) setGeneratedImageUrl(savedGeneratedImageUrl)
     if (savedComparisonResult) {
       try {
@@ -375,7 +375,7 @@ export function ImageRecreationChallenge() {
               <Camera className="h-6 w-6 text-white" />
             </div>
             <div>
-              <CardTitle className="text-2xl text-gray-800 dark:text-white">AICCORE Image Recreation Excerise </CardTitle>
+              <CardTitle className="text-2xl text-gray-800 dark:text-white">AICCORE Image Recreation Exercise</CardTitle>
               <p className="text-gray-600 dark:text-gray-300">Select a reference image and recreate it using AI</p>
             </div>
           </div>
@@ -537,16 +537,16 @@ export function ImageRecreationChallenge() {
                   </h4>
                   <div className="space-y-2 text-xs">
                     <div className="p-2 bg-orange-50/50 dark:bg-orange-900/20 rounded">
-                      <strong className="text-orange-700 dark:text-orange-300">DALL-E 3:</strong> <span className="text-gray-600 dark:text-gray-300">Best overall quality and prompt adherence</span>
+                      <strong className="text-orange-700 dark:text-orange-300">FLUX.2 Pro:</strong> <span className="text-gray-600 dark:text-gray-300">Highest fidelity and best prompt adherence</span>
                     </div>
                     <div className="p-2 bg-purple-50/50 dark:bg-purple-900/20 rounded">
-                      <strong className="text-purple-700 dark:text-purple-300">GPT-4o:</strong> <span className="text-gray-600 dark:text-gray-300">Excellent for artistic and creative interpretations</span>
+                      <strong className="text-purple-700 dark:text-purple-300">Nano Banana:</strong> <span className="text-gray-600 dark:text-gray-300">Excellent prompt fidelity and creative interpretations</span>
                     </div>
                     <div className="p-2 bg-green-50/50 dark:bg-green-900/20 rounded">
                       <strong className="text-green-700 dark:text-green-300">FLUX Schnell:</strong> <span className="text-gray-600 dark:text-gray-300">Fast generation with stylized results</span>
                     </div>
                     <div className="p-2 bg-emerald-50/50 dark:bg-emerald-900/20 rounded">
-                      <strong className="text-emerald-700 dark:text-emerald-300">MiniMax Image-01:</strong> <span className="text-gray-600 dark:text-gray-300">Advanced prompt optimization and aspect ratios</span>
+                      <strong className="text-emerald-700 dark:text-emerald-300">Imagen-4 Fast:</strong> <span className="text-gray-600 dark:text-gray-300">Google Imagen 4, great quality and quick iteration</span>
                     </div>
                     <div className="p-2 bg-indigo-50/50 dark:bg-indigo-900/20 rounded">
                       <strong className="text-indigo-700 dark:text-indigo-300">Recraft V3:</strong> <span className="text-gray-600 dark:text-gray-300">Professional image generation with high-quality output</span>

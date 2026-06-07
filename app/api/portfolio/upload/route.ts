@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/server'
+import { supabase, publicStorageUrl } from '@/lib/supabase/server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -106,10 +106,8 @@ export async function POST(request: NextRequest) {
         }, { status: 500 })
       }
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('portfolio-screenshots')
-        .getPublicUrl(uploadData.path)
+      // Get public URL (built from the PUBLIC base so browsers can load it)
+      const publicUrl = publicStorageUrl('portfolio-screenshots', uploadData.path)
 
       screenshotUrls.push(publicUrl)
     }
@@ -126,8 +124,7 @@ export async function POST(request: NextRequest) {
         screenshot_urls: screenshotUrls,
         screenshot_count: screenshotUrls.length,
         tags,
-        is_public: isPublic,
-        is_deployed: isDeployed
+        is_public: isPublic
       })
       .select()
       .single()
@@ -571,9 +568,7 @@ export async function PATCH(request: NextRequest) {
         }, { status: 500 })
       }
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('portfolio-screenshots')
-        .getPublicUrl(uploadData.path)
+      const publicUrl = publicStorageUrl('portfolio-screenshots', uploadData.path)
 
       newScreenshotUrls.push(publicUrl)
     }

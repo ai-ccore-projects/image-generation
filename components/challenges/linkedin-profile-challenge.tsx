@@ -3,43 +3,27 @@
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { supabase } from "@/lib/supabase/client"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-  Camera, 
-  User, 
-  Upload, 
+import {
+  Camera,
+  User,
+  Upload,
   CheckCircle2,
-  Trophy,
   Target,
   Star,
-  Car,
-  GraduationCap,
   Building,
-  Users,
-  Presentation,
   UserCheck,
   Wand2,
   RotateCcw,
   Save,
-  Plus,
   Edit,
-  Combine,
   MapPin,
-  ArrowRight,
-  ArrowLeft,
-  Check,
   Info,
-  Zap,
-  TrendingUp,
   X
 } from "lucide-react"
 
@@ -47,7 +31,7 @@ interface EditingChallenge {
   id: number
   title: string
   description: string
-  category: "single" | "multi"
+  category: "single"
   model: string
   points: number
   difficulty: "easy" | "medium" | "hard"
@@ -70,12 +54,9 @@ interface GeneratedPhoto {
 export function LinkedInProfileChallenge() {
   const [userPhoto, setUserPhoto] = useState<File | null>(null)
   const [userPhotoUrl, setUserPhotoUrl] = useState<string>("")
-  const [additionalImages, setAdditionalImages] = useState<Record<string, File>>({})
-  const [additionalImageUrls, setAdditionalImageUrls] = useState<Record<string, string>>({})
   const [selectedTask, setSelectedTask] = useState<EditingChallenge | null>(null)
   const [selectedModel, setSelectedModel] = useState<string>("")
   const [customPrompt, setCustomPrompt] = useState("")
-  const [taskInputs, setTaskInputs] = useState<Record<string, string>>({})
   const [isGenerating, setIsGenerating] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [generatedPhotos, setGeneratedPhotos] = useState<Record<number, GeneratedPhoto>>({})
@@ -118,7 +99,7 @@ export function LinkedInProfileChallenge() {
 
   const singleImageModels = [
     { id: "flux-kontext-pro", name: "FLUX Kontext Pro", description: "Advanced image editing with style transfer and object manipulation" },
-    { id: "gpt-image-1", name: "GPT-Image-1", description: "Professional image composition and pattern integration" }
+    { id: "nano-banana", name: "Nano Banana", description: "Google's latest image-editing model — great for portraits, backgrounds, and lighting" }
   ]
   const editingChallenges: EditingChallenge[] = [
     // Professional Image Editing Tasks (6)
@@ -183,7 +164,7 @@ export function LinkedInProfileChallenge() {
       title: "Lighting Enhancement",
       description: "Improve photo lighting to achieve professional studio quality",
       category: "single",
-      model: "gpt-image-1",
+      model: "nano-banana",
       points: 30,
       difficulty: "hard",
       icon: Target,
@@ -197,7 +178,7 @@ export function LinkedInProfileChallenge() {
       title: "Corporate Headshot",
       description: "Create a polished corporate headshot suitable for LinkedIn profiles",
       category: "single",
-      model: "gpt-image-1",
+      model: "nano-banana",
       points: 35,
       difficulty: "hard",
       icon: Building,
@@ -208,22 +189,18 @@ export function LinkedInProfileChallenge() {
     }
   ]
 
-  const uploadImage = async (file: File, key: string) => {
+  const uploadImage = async (file: File) => {
     try {
       const fileExt = file.name.split('.').pop()
-      const fileName = `${user?.id}/${key}-${Date.now()}.${fileExt}`
-      
+      const fileName = `${user?.id}/main-${Date.now()}.${fileExt}`
+
       const { error: uploadError } = await supabase.storage
         .from('profile-photos')
         .upload(fileName, file, { upsert: true })
 
       if (!uploadError) {
         const { data } = supabase.storage.from('profile-photos').getPublicUrl(fileName)
-        if (key === 'main') {
-          setUserPhotoUrl(data.publicUrl)
-        } else {
-          setAdditionalImageUrls(prev => ({ ...prev, [key]: data.publicUrl }))
-        }
+        setUserPhotoUrl(data.publicUrl)
       }
     } catch (error) {
       console.error('Error uploading image:', error)
@@ -251,8 +228,9 @@ export function LinkedInProfileChallenge() {
         params.aspect_ratio = "match_input_image"
         params.output_format = "jpg"
         params.safety_tolerance = 2
-      } else if (selectedModel === "gpt-image-1") {
-        params.input_images = [userPhotoUrl]
+      } else if (selectedModel === "nano-banana") {
+        params.input_image = userPhotoUrl
+        params.output_format = "jpg"
       }
 
       console.log(`🎨 Starting single image editing:`)
@@ -358,40 +336,16 @@ export function LinkedInProfileChallenge() {
     }
   }
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'easy': return 'bg-emerald-500'
-      case 'medium': return 'bg-amber-500'
-      case 'hard': return 'bg-red-500'
-      default: return 'bg-gray-500'
-    }
-  }
-
-  const completedTasks = Object.keys(generatedPhotos).length
-  const totalPoints = Object.values(generatedPhotos).reduce((sum, photo) => {
-    const task = editingChallenges.find(t => t.id === photo.task_id)
-    return sum + (task?.points || 0)
-  }, 0)
-
   useEffect(() => {
     const savedPhotoUrl = localStorage.getItem('linkedin-challenge-main-photo')
-    const savedAdditionalUrls = localStorage.getItem('linkedin-challenge-additional-images')
     const savedCompletedTasks = localStorage.getItem('linkedin-challenge-completed-tasks')
     const savedSelectedTask = localStorage.getItem('linkedin-challenge-selected-task')
     const savedSelectedModel = localStorage.getItem('linkedin-challenge-selected-model')
     const savedCustomPrompt = localStorage.getItem('linkedin-challenge-custom-prompt')
     const savedCurrentGeneration = localStorage.getItem('linkedin-challenge-current-generation')
-    const savedTaskInputs = localStorage.getItem('linkedin-challenge-task-inputs')
-    
+
     if (savedPhotoUrl) {
       setUserPhotoUrl(savedPhotoUrl)
-    }
-    if (savedAdditionalUrls) {
-      try {
-        setAdditionalImageUrls(JSON.parse(savedAdditionalUrls))
-      } catch (e) {
-        console.error('Error parsing saved additional images:', e)
-      }
     }
     if (savedCompletedTasks) {
       try {
@@ -420,13 +374,6 @@ export function LinkedInProfileChallenge() {
     if (savedCurrentGeneration) {
       setCurrentGeneration(savedCurrentGeneration)
     }
-    if (savedTaskInputs) {
-      try {
-        setTaskInputs(JSON.parse(savedTaskInputs))
-      } catch (e) {
-        console.error('Error parsing saved task inputs:', e)
-      }
-    }
   }, [])
 
   // Save to localStorage whenever data changes
@@ -435,12 +382,6 @@ export function LinkedInProfileChallenge() {
       localStorage.setItem('linkedin-challenge-main-photo', userPhotoUrl)
     }
   }, [userPhotoUrl])
-
-  useEffect(() => {
-    if (Object.keys(additionalImageUrls).length > 0) {
-      localStorage.setItem('linkedin-challenge-additional-images', JSON.stringify(additionalImageUrls))
-    }
-  }, [additionalImageUrls])
 
   useEffect(() => {
     if (Object.keys(generatedPhotos).length > 0) {
@@ -482,26 +423,10 @@ export function LinkedInProfileChallenge() {
   }, [currentGeneration])
 
   useEffect(() => {
-    if (Object.keys(taskInputs).length > 0) {
-      localStorage.setItem('linkedin-challenge-task-inputs', JSON.stringify(taskInputs))
-    } else {
-      localStorage.removeItem('linkedin-challenge-task-inputs')
-    }
-  }, [taskInputs])
-
-  useEffect(() => {
     if (userPhoto) {
-      uploadImage(userPhoto, 'main')
+      uploadImage(userPhoto)
     }
   }, [userPhoto])
-
-  useEffect(() => {
-    Object.entries(additionalImages).forEach(([key, file]) => {
-      if (file) {
-        uploadImage(file, key)
-      }
-    })
-  }, [additionalImages])
 
   useEffect(() => {
     // Reset model selection when task changes to ensure compatibility
@@ -517,23 +442,18 @@ export function LinkedInProfileChallenge() {
     if (confirm("Are you sure you want to reset the entire challenge? This will clear all your progress and uploaded photos.")) {
       setUserPhoto(null)
       setUserPhotoUrl("")
-      setAdditionalImages({})
-      setAdditionalImageUrls({})
       setSelectedTask(null)
       setSelectedModel("")
       setCustomPrompt("")
-      setTaskInputs({})
       setCurrentGeneration("")
       setGeneratedPhotos({})
       // Clear all localStorage
       localStorage.removeItem('linkedin-challenge-main-photo')
-      localStorage.removeItem('linkedin-challenge-additional-images')
       localStorage.removeItem('linkedin-challenge-completed-tasks')
       localStorage.removeItem('linkedin-challenge-selected-task')
       localStorage.removeItem('linkedin-challenge-selected-model')
       localStorage.removeItem('linkedin-challenge-custom-prompt')
       localStorage.removeItem('linkedin-challenge-current-generation')
-      localStorage.removeItem('linkedin-challenge-task-inputs')
     }
   }
 
@@ -555,7 +475,7 @@ export function LinkedInProfileChallenge() {
                 <Edit className="h-6 w-6 text-white" />
               </div>
               <div>
-                <CardTitle className="text-2xl text-gray-800 dark:text-white">AICCORE Photo Editing Excerise </CardTitle>
+                <CardTitle className="text-2xl text-gray-800 dark:text-white">AICCORE Photo Editing Exercise</CardTitle>
                 <p className="text-gray-600 dark:text-gray-300">Transform your photos with AI-powered editing models</p>
               </div>
             </div>
